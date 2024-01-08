@@ -1,0 +1,5 @@
+FROM openjdk:17-jdk
+ARG JAR_PATH=./build/libs
+COPY ${JAR_PATH}/api.jar api.jar
+ENTRYPOINT ["java", "-jar"]
+CMD ["/api.jar"]
