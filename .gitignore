@@ -6,7 +6,7 @@ build/
 !**/src/test/**/build/
 
 ### yml
-!**/application-infra-rdb.yml
+application-infra-rdb.yml
 
 ### STS ###
 .apt_generated
