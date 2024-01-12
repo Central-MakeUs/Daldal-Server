@@ -53,6 +53,6 @@ jobs:
 
       - name: Trigger Portainer Webhook
         run: |
-          PORTAINER_WEBHOOK_URL="http://3.34.57.166:9000/api/webhooks/2ac9fbf0-c91e-492e-91fc-562161326886"
+          PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_WEBHOOK_DNS}}
           curl -X POST -d "{}" -H "Content-Type: application/json" --insecure $PORTAINER_WEBHOOK_URL
     
