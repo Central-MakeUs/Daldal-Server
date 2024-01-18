@@ -12,6 +12,9 @@ public class Item {
     @Lob
     private String detail;
 
+    @Lob
+    private String redirectUrl;
+
     @Enumerated(value = EnumType.STRING)
     private ItemCategoryType categoryType;
 
