@@ -1,9 +1,10 @@
 package com.mm.coredomain.domain;
 
+import com.mm.coredomain.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String name;

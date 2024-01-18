@@ -1,10 +1,11 @@
 package com.mm.coredomain.domain;
 
+import com.mm.coredomain.BaseEntity;
 import jakarta.persistence.*;
 import org.yaml.snakeyaml.events.Event;
 
 @Entity
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,11 +1,12 @@
 package com.mm.coredomain.domain;
 
+import com.mm.coredomain.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-public class Buy {
+public class Buy extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

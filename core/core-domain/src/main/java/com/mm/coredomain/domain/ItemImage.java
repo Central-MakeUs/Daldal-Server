@@ -1,9 +1,10 @@
 package com.mm.coredomain.domain;
 
+import com.mm.coredomain.BaseEntity;
 import jakarta.persistence.*;
 
 @Entity
-public class ItemImage{
+public class ItemImage extends BaseEntity {
     @Id
     private Long id;
 
