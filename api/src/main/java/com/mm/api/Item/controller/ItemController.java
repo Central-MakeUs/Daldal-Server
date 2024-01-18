@@ -28,6 +28,12 @@ public class ItemController {
         return ResponseEntity.ok(response);
     }
 
+    @DeleteMapping("/items/{id}")
+    public ResponseEntity<?> updateItem(@RequestParam Long id){
+        itemService.deleteItem(id);
+        return ResponseEntity.noContent().build();
+    }
+
     // 관리자 권한
 
     @GetMapping("/items")

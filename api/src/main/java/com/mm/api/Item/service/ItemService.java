@@ -60,4 +60,8 @@ public class ItemService {
         item.updateItem(itemUpdate);
         return ItemResponse.of(item);
     }
+
+    public void deleteItem(Long id) {
+        itemRepository.deleteById(id);
+    }
 }
