@@ -2,6 +2,7 @@ package com.mm.api.Item.controller;
 
 import com.mm.api.Item.dto.request.ItemCreateRequest;
 import com.mm.api.Item.dto.request.ItemUpdateRequest;
+import com.mm.api.Item.dto.response.ItemDetailResponse;
 import com.mm.api.Item.dto.response.ItemResponse;
 import com.mm.api.Item.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,11 @@ public class ItemController {
     public ResponseEntity<?> getItems(@RequestParam(required = false, defaultValue = "1") Integer page){
         List<ItemResponse> responses = itemService.getItems(page);
         return ResponseEntity.ok(responses);
+    }
+
+    @GetMapping("/items/{id}")
+    public ResponseEntity<?> getItemDetail(@RequestParam Long id){
+        ItemDetailResponse response = itemService.getItemDetail(id);
+        return ResponseEntity.ok(response);
     }
 }

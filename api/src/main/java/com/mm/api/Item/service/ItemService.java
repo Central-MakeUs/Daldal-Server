@@ -2,6 +2,7 @@ package com.mm.api.Item.service;
 
 import com.mm.api.Item.dto.request.ItemCreateRequest;
 import com.mm.api.Item.dto.request.ItemUpdateRequest;
+import com.mm.api.Item.dto.response.ItemDetailResponse;
 import com.mm.api.Item.dto.response.ItemResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -59,10 +60,24 @@ public class ItemService {
                 .toList();
     }
 
-    // TODO 이미지, 비디오 url?
-    public void getItemDetail(){}
+    public ItemDetailResponse getItemDetail(Long id){
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+
+        List<String> images = item.getItemImages().stream()
+                .map(ItemImage::getUrl)
+                .toList();
+        List<String> videos = item.getItemVideos().stream()
+                .map(ItemVideo::getUrl)
+                .toList();
+
+        return ItemDetailResponse.of(item, images, videos);
+    }
 
     public ItemResponse updateItem(Long id, ItemUpdateRequest request) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+
         ItemUpdate itemUpdate = ItemUpdate.builder()
                 .detail(request.detail())
                 .redirectUrl(request.redirectUrl())
@@ -72,9 +87,6 @@ public class ItemService {
                 .rating(request.rating())
                 .thumbnailUrl(request.thumbnailUrl())
                 .build();
-
-        Item item = itemRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
         item.updateItem(itemUpdate);
 
         List<ItemImage> itemImages = request.ImageUrls()
