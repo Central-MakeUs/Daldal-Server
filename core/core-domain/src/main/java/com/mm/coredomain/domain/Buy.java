@@ -1,6 +1,5 @@
 package com.mm.coredomain.domain;
 
-import com.mm.coredomain.BaseEntity;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;

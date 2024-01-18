@@ -1,10 +1,13 @@
 package com.mm.coredomain.domain;
 
-import com.mm.coredomain.BaseEntity;
 import jakarta.persistence.*;
-import org.yaml.snakeyaml.events.Event;
+import lombok.*;
 
 @Entity
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +30,14 @@ public class Item extends BaseEntity {
 
     @Lob
     private String thumbnailUrl;
+
+    public void updateItem(ItemUpdate itemUpdate){
+        this.detail = itemUpdate.detail();
+        this.redirectUrl = itemUpdate.redirectUrl();
+        this.categoryType = itemUpdate.categoryType();
+        this.price = itemUpdate.price();
+        this.refund = itemUpdate.refund();
+        this.rating = itemUpdate.rating();
+        this.thumbnailUrl = itemUpdate.thumbnailUrl();
+    }
 }

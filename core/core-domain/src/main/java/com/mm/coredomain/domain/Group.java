@@ -1,7 +1,5 @@
 package com.mm.coredomain.domain;
 
-import com.mm.coredomain.BaseEntity;
-import com.querydsl.core.types.QList;
 import jakarta.persistence.*;
 
 import java.util.List;
