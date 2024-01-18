@@ -5,9 +5,7 @@ import com.mm.api.Item.dto.request.ItemUpdateRequest;
 import com.mm.api.Item.dto.response.ItemResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
-import com.mm.coredomain.domain.Item;
-import com.mm.coredomain.domain.ItemCategoryType;
-import com.mm.coredomain.domain.ItemUpdate;
+import com.mm.coredomain.domain.*;
 import com.mm.coredomain.repository.ItemRepository;
 import com.mm.coreinfraqdsl.repository.ItemCustomRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +25,27 @@ public class ItemService {
 
     public ItemResponse createItem(ItemCreateRequest request) {
         Item item = request.toEntity();
+
+        List<ItemImage> itemImages = request.ImageUrls()
+                .stream()
+                .map(url ->
+                        ItemImage.builder()
+                                .url(url)
+                                .item(item)
+                                .build())
+                .toList();
+
+        List<ItemVideo> itemVideos = request.ImageUrls()
+                .stream()
+                .map(url ->
+                        ItemVideo.builder()
+                                .url(url)
+                                .item(item)
+                                .build())
+                .toList();
+
+        item.setItemImages(itemImages);
+        item.setItemVideos(itemVideos);
 
         Item savedItem = itemRepository.save(item);
         return ItemResponse.of(savedItem);
@@ -56,8 +75,28 @@ public class ItemService {
 
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-
         item.updateItem(itemUpdate);
+
+        List<ItemImage> itemImages = request.ImageUrls()
+                .stream()
+                .map(url ->
+                        ItemImage.builder()
+                                .url(url)
+                                .item(item)
+                                .build())
+                .toList();
+        List<ItemVideo> itemVideos = request.ImageUrls()
+                .stream()
+                .map(url ->
+                        ItemVideo.builder()
+                                .url(url)
+                                .item(item)
+                                .build())
+                .toList();
+
+        item.setItemImages(itemImages);
+        item.setItemVideos(itemVideos);
+
         return ItemResponse.of(item);
     }
 

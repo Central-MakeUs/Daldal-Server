@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -32,6 +34,20 @@ public class Item extends BaseEntity {
 
     @Lob
     private String thumbnailUrl;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemImage> itemImages;
+
+    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemVideo> itemVideos;
+
+    public void setItemImages(List<ItemImage> itemImages){
+        this.itemImages = itemImages;
+    }
+
+    public void setItemVideos(List<ItemVideo> itemVideos){
+        this.itemVideos = itemVideos;
+    }
 
     public void updateItem(ItemUpdate itemUpdate){
         this.detail = itemUpdate.detail();
