@@ -8,8 +8,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EntityScan("com.pgms.coredomain")
-@EnableJpaRepositories("com.mm.coredomain")
 @EnableJpaAuditing
+@EnableTransactionManagement
+@EnableJpaRepositories("com.mm.coredomain")
 public class CoreDomainConfig {
 }
-
