@@ -5,7 +5,6 @@ import com.mm.api.Item.dto.request.ItemUpdateRequest;
 import com.mm.api.Item.dto.response.ItemDetailResponse;
 import com.mm.api.Item.dto.response.ItemResponse;
 import com.mm.api.exception.CustomException;
-import com.mm.api.exception.ErrorCode;
 import com.mm.coredomain.domain.*;
 import com.mm.coredomain.repository.ItemRepository;
 import com.mm.coreinfraqdsl.repository.ItemCustomRepository;
@@ -27,23 +26,8 @@ public class ItemService {
     public ItemResponse createItem(ItemCreateRequest request) {
         Item item = request.toEntity();
 
-        List<ItemImage> itemImages = request.ImageUrls()
-                .stream()
-                .map(url ->
-                        ItemImage.builder()
-                                .url(url)
-                                .item(item)
-                                .build())
-                .toList();
-
-        List<ItemVideo> itemVideos = request.ImageUrls()
-                .stream()
-                .map(url ->
-                        ItemVideo.builder()
-                                .url(url)
-                                .item(item)
-                                .build())
-                .toList();
+        List<ItemImage> itemImages = getItemImages(request.imageUrls(), item);
+        List<ItemVideo> itemVideos = getItemVideos(request.videoUrls(), item);
 
         item.setItemImages(itemImages);
         item.setItemVideos(itemVideos);
@@ -78,7 +62,20 @@ public class ItemService {
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 
-        ItemUpdate itemUpdate = ItemUpdate.builder()
+        ItemUpdate itemUpdate = getItemUpdate(request);
+        item.updateItem(itemUpdate);
+
+        List<ItemImage> itemImages = getItemImages(request.imageUrls(), item);
+        List<ItemVideo> itemVideos = getItemVideos(request.videoUrls(), item);
+
+        item.setItemImages(itemImages);
+        item.setItemVideos(itemVideos);
+
+        return ItemResponse.of(item);
+    }
+
+    private ItemUpdate getItemUpdate(ItemUpdateRequest request) {
+        return ItemUpdate.builder()
                 .detail(request.detail())
                 .redirectUrl(request.redirectUrl())
                 .categoryType(ItemCategoryType.of(request.categoryType()))
@@ -87,17 +84,14 @@ public class ItemService {
                 .rating(request.rating())
                 .thumbnailUrl(request.thumbnailUrl())
                 .build();
-        item.updateItem(itemUpdate);
+    }
 
-        List<ItemImage> itemImages = request.ImageUrls()
-                .stream()
-                .map(url ->
-                        ItemImage.builder()
-                                .url(url)
-                                .item(item)
-                                .build())
-                .toList();
-        List<ItemVideo> itemVideos = request.ImageUrls()
+    public void deleteItem(Long id) {
+        itemRepository.deleteById(id);
+    }
+
+    private List<ItemVideo> getItemVideos(List<String> videoUrls, Item item) {
+        List<ItemVideo> itemVideos = videoUrls
                 .stream()
                 .map(url ->
                         ItemVideo.builder()
@@ -105,14 +99,18 @@ public class ItemService {
                                 .item(item)
                                 .build())
                 .toList();
-
-        item.setItemImages(itemImages);
-        item.setItemVideos(itemVideos);
-
-        return ItemResponse.of(item);
+        return itemVideos;
     }
 
-    public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
+    private List<ItemImage> getItemImages(List<String> imageUrls, Item item) {
+        List<ItemImage> itemImages = imageUrls
+                .stream()
+                .map(url ->
+                        ItemImage.builder()
+                                .url(url)
+                                .item(item)
+                                .build())
+                .toList();
+        return itemImages;
     }
 }

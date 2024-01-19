@@ -9,6 +9,6 @@ public record ItemUpdateRequest(String detail,
                                 Integer refund,
                                 Double rating,
                                 String thumbnailUrl,
-                                List<String> ImageUrls,
-                                List<String> VideoUrls) {
+                                List<String> imageUrls,
+                                List<String> videoUrls) {
 }
