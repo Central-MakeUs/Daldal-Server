@@ -74,6 +74,10 @@ public class ItemService {
         return ItemResponse.of(item);
     }
 
+    public void deleteItem(Long id) {
+        itemRepository.deleteById(id);
+    }
+
     private ItemUpdate getItemUpdate(ItemUpdateRequest request) {
         return ItemUpdate.builder()
                 .detail(request.detail())
@@ -86,12 +90,8 @@ public class ItemService {
                 .build();
     }
 
-    public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
-    }
-
     private List<ItemVideo> getItemVideos(List<String> videoUrls, Item item) {
-        List<ItemVideo> itemVideos = videoUrls
+        return videoUrls
                 .stream()
                 .map(url ->
                         ItemVideo.builder()
@@ -99,11 +99,10 @@ public class ItemService {
                                 .item(item)
                                 .build())
                 .toList();
-        return itemVideos;
     }
 
     private List<ItemImage> getItemImages(List<String> imageUrls, Item item) {
-        List<ItemImage> itemImages = imageUrls
+        return imageUrls
                 .stream()
                 .map(url ->
                         ItemImage.builder()
@@ -111,6 +110,5 @@ public class ItemService {
                                 .item(item)
                                 .build())
                 .toList();
-        return itemImages;
     }
 }
