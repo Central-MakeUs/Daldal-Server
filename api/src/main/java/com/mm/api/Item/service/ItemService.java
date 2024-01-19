@@ -36,6 +36,7 @@ public class ItemService {
         return ItemResponse.of(savedItem);
     }
 
+    @Transactional(readOnly = true)
     public List<ItemResponse> getItems(Integer page) {
         List<Item> items = itemCustomRepository.getItemsByPage(page);
 
@@ -44,6 +45,7 @@ public class ItemService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ItemDetailResponse getItemDetail(Long id){
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
