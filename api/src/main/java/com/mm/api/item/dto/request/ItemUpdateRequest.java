@@ -1,4 +1,4 @@
-package com.mm.api.Item.dto.request;
+package com.mm.api.item.dto.request;
 
 import java.util.List;
 

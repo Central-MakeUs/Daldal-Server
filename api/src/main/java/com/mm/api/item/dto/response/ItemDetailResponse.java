@@ -1,4 +1,4 @@
-package com.mm.api.Item.dto.response;
+package com.mm.api.item.dto.response;
 
 import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemCategoryType;

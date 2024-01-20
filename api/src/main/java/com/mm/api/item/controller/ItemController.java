@@ -1,10 +1,10 @@
-package com.mm.api.Item.controller;
+package com.mm.api.item.controller;
 
-import com.mm.api.Item.dto.request.ItemCreateRequest;
-import com.mm.api.Item.dto.request.ItemUpdateRequest;
-import com.mm.api.Item.dto.response.ItemDetailResponse;
-import com.mm.api.Item.dto.response.ItemResponse;
-import com.mm.api.Item.service.ItemService;
+import com.mm.api.item.dto.request.ItemCreateRequest;
+import com.mm.api.item.dto.request.ItemUpdateRequest;
+import com.mm.api.item.dto.response.ItemDetailResponse;
+import com.mm.api.item.dto.response.ItemResponse;
+import com.mm.api.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
