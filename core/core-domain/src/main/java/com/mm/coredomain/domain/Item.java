@@ -41,15 +41,15 @@ public class Item extends BaseEntity {
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ItemVideo> itemVideos;
 
-    public void setItemImages(List<ItemImage> itemImages){
+    public void setItemImages(List<ItemImage> itemImages) {
         this.itemImages = itemImages;
     }
 
-    public void setItemVideos(List<ItemVideo> itemVideos){
+    public void setItemVideos(List<ItemVideo> itemVideos) {
         this.itemVideos = itemVideos;
     }
 
-    public void updateItem(ItemUpdate itemUpdate){
+    public void updateItem(ItemUpdate itemUpdate) {
         this.detail = itemUpdate.detail();
         this.redirectUrl = itemUpdate.redirectUrl();
         this.categoryType = itemUpdate.categoryType();
