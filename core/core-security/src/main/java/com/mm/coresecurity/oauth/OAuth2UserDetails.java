@@ -1,4 +1,4 @@
-package com.mm.coresecurity;
+package com.mm.coresecurity.oauth;
 
 import java.util.Collection;
 
@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import net.minidev.json.annotate.JsonIgnore;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -14,15 +15,16 @@ public class OAuth2UserDetails implements UserDetails {
 	private Long id;
 	private String email;
 	@JsonIgnore
-	private String password;
 	private Collection<? extends GrantedAuthority> authorities;
+	private OAuthProvider provider;
 
+	@Builder
 	public OAuth2UserDetails(Long id, String email, String password,
-		Collection<? extends GrantedAuthority> authorities) {
+		Collection<? extends GrantedAuthority> authorities, OAuthProvider provider) {
 		this.id = id;
 		this.email = email;
-		this.password = password;
 		this.authorities = authorities;
+		this.provider = provider;
 	}
 
 	@Override
@@ -32,7 +34,7 @@ public class OAuth2UserDetails implements UserDetails {
 
 	@Override
 	public String getPassword() {
-		return password;
+		return null;
 	}
 
 	@Override

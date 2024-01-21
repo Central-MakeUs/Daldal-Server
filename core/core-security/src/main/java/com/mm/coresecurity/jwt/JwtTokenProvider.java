@@ -4,11 +4,13 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.mm.coresecurity.OAuth2UserDetails;
+import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -20,10 +22,13 @@ public class JwtTokenProvider {
 	private String secretKey;
 
 	@Value("${jwt.expiry-seconds}")
-	private int exprirySeconds;
+	private int expirySeconds;
+
+	@Value("${jwt.refresh-expiry-seconds}")
+	private int refreshExpirySeconds;
 
 	public String generateAccessToken(OAuth2UserDetails userDetails) {
-		Instant expirationTime = Instant.now().plusSeconds(exprirySeconds);
+		Instant expirationTime = Instant.now().plusSeconds(expirySeconds);
 
 		String authorities = null;
 		if (userDetails.getAuthorities() != null) {
@@ -38,7 +43,25 @@ public class JwtTokenProvider {
 			.issuedAt(Date.from(Instant.now()))
 			.expiration(Date.from(expirationTime))
 			.claim("authorities", authorities)
-			.signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
+			.signWith(getKey())
 			.compact();
+	}
+
+	public String generateRefreshToken() {
+		Instant expirationTime = Instant.now().plusSeconds(refreshExpirySeconds);
+
+		return Jwts.builder()
+			.issuedAt(Date.from(Instant.now()))
+			.expiration(Date.from(expirationTime))
+			.signWith(getKey())
+			.compact();
+	}
+
+	private SecretKey getKey() {
+		return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+	}
+
+	public void validateAccessToken(String token) {
+		Jwts.parser().verifyWith(getKey()).build().parse(token);
 	}
 }
