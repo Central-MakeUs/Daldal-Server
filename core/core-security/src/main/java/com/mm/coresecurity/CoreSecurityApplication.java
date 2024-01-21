@@ -1,4 +1,4 @@
-package com.example.coresecurity;
+package com.mm.coresecurity;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
