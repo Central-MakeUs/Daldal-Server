@@ -11,13 +11,13 @@ import lombok.Getter;
 
 @Getter
 @Entity
-public class Group extends BaseEntity {
+public class Groups extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private String name;
 
-	@OneToMany(mappedBy = "group")
+	@OneToMany(mappedBy = "groups")
 	private List<GroupPermission> groupPermissions;
 }

@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 import com.mm.coresecurity.jwt.JwtAccessDeniedHandler;
 import com.mm.coresecurity.jwt.JwtAuthenticationEntryPoint;
@@ -42,7 +42,6 @@ public class WebSecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.oauth2Login(oauth2Configurer ->
 				oauth2Configurer
-					.loginPage("/login")
 					.successHandler(oAuth2AuthSuccessHandler)
 					.userInfoEndpoint()
 					.userService(oAuth2UserService))
@@ -50,7 +49,7 @@ public class WebSecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.anyRequest().permitAll())
 
-			.addFilterAfter(jwtAuthenticationFilter, SecurityContextPersistenceFilter.class)
+			.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
 			.exceptionHandling(exceptionHandlingConfigurer -> {
 				exceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthenticationEntryPoint);
 				exceptionHandlingConfigurer.accessDeniedHandler(jwtAccessDeniedHandler);

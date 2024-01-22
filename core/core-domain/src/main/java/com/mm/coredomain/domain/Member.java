@@ -33,5 +33,5 @@ public class Member extends BaseEntity {
 	private MemberStatus memberStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	private Group group;
+	private Groups groups;
 }

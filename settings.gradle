@@ -2,5 +2,6 @@ rootProject.name = 'daldal'
 
 include 'api'
 include 'core:core-domain'
-include 'core:core-infra:core-infra-qdsl'
+include 'core:core-infra-qdsl'
+include 'core:core-infra-rdb'
 include 'core:core-security'

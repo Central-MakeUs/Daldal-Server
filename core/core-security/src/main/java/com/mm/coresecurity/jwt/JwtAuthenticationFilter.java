@@ -2,6 +2,8 @@ package com.mm.coresecurity.jwt;
 
 import java.io.IOException;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,17 +25,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
 		FilterChain filterChain) throws ServletException, IOException {
-		try {
+		if (SecurityContextHolder.getContext().getAuthentication() == null) {
 			String accessToken = resolveToken(request);
-			jwtTokenProvider.validateAccessToken(accessToken);
-		} catch (ExpiredJwtException e) {
-			log.info(">>>>> access token expired {}", e);
-			throw e;
-		} catch (Exception e) {
-			log.warn(">>>>> Authentication Failed {}", e);
-			throw e;
+			if (accessToken != null) {
+				try {
+					jwtTokenProvider.validateAccessToken(accessToken);
+					Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+				} catch (ExpiredJwtException e) {
+					log.info(">>>>> access token expired {}", e);
+					throw e;
+				} catch (Exception e) {
+					log.warn(">>>>> Authentication Failed {}", e);
+					throw e;
+				}
+			}
 		}
-
 		filterChain.doFilter(request, response);
 	}
 

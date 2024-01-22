@@ -19,7 +19,7 @@ public class OAuth2UserDetails implements UserDetails {
 	private OAuthProvider provider;
 
 	@Builder
-	public OAuth2UserDetails(Long id, String email, String password,
+	public OAuth2UserDetails(Long id, String email,
 		Collection<? extends GrantedAuthority> authorities, OAuthProvider provider) {
 		this.id = id;
 		this.email = email;

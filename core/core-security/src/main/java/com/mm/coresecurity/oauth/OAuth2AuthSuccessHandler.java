@@ -12,7 +12,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mm.coredomain.domain.Groups;
 import com.mm.coredomain.domain.Member;
+import com.mm.coredomain.repository.GroupRepository;
 import com.mm.coredomain.repository.MemberRepository;
 import com.mm.coresecurity.jwt.JwtTokenProvider;
 import com.mm.coresecurity.util.HttpResponseUtil;
@@ -30,17 +32,18 @@ import lombok.extern.slf4j.Slf4j;
 public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final MemberRepository memberRepository;
-
+	private final GroupRepository groupRepository;
+	
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException, ServletException {
 		DefaultOAuth2User principal = (DefaultOAuth2User)authentication.getPrincipal();
 
-		Map<String, String> properties = principal.getAttribute("properties");
+		Map<String, String> properties = principal.getAttribute("kakao_account");
 		String email = properties.get("email");
 
 		Member member = getMemberElseCreateMember(email);
-		List<SimpleGrantedAuthority> authorities = member.getGroup()
+		List<SimpleGrantedAuthority> authorities = member.getGroups()
 			.getGroupPermissions()
 			.stream()
 			.map(groupPermission -> new SimpleGrantedAuthority(groupPermission.getPermission().getName()))
@@ -61,13 +64,16 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
 		tokenMap.put("accessToken", accessToken);
 		tokenMap.put("refreshToken", refreshToken);
 
+		response.addHeader("Authorization", "Bearer " + accessToken);
 		HttpResponseUtil.writeSuccessResponse(response, tokenMap);
 	}
 
 	private Member getMemberElseCreateMember(String email) {
 		return memberRepository.findByEmail(email).orElseGet(() -> {
+			Groups userGroup = groupRepository.findByName("USER_GROUP").orElseThrow(RuntimeException::new);
 			Member member = Member.builder()
 				.email(email)
+				.groups(userGroup)
 				.build();
 			return memberRepository.save(member);
 		});
