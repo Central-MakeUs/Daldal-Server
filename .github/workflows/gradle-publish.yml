@@ -17,10 +17,13 @@ jobs:
 
     - name: Create necessary directories
       run: |
-        mkdir -p core/core-infra/core-infra-rdb/src/main/resources
+        mkdir -p core/core-infra-rdb/src/main/resources
+        mkdir -p core/core-security/src/main/resources
         
     - name: Create application-properties.yml
-      run: echo "${{ secrets.APPLICATION_INFRA_RDB }}" > core/core-infra/core-infra-rdb/src/main/resources/application-infra-rdb.yml
+      run: |
+        echo "${{ secrets.APPLICATION_INFRA_RDB }}" > core/core-infra-rdb/src/main/resources/application-infra-rdb.yml
+        echo "${{ secrets.APPLICATION_SECURITY }}" > core/core-security/src/main/resources/application-security.yml
     
     - name: Set up JDK 17
       uses: actions/setup-java@v3
