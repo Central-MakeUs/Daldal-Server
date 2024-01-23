@@ -9,6 +9,7 @@ dependencies {
     implementation project(':core:core-domain');
     implementation project(':core:core-infra-rdb');
     implementation project(':core:core-infra-qdsl');
+    implementation project(':core:core-infra-redis');
     implementation project(':core:core-security');
 
     // validation
@@ -25,4 +26,7 @@ dependencies {
 
     // security
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }

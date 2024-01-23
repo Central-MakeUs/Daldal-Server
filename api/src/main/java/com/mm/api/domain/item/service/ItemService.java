@@ -1,4 +1,4 @@
-package com.mm.api.item.service;
+package com.mm.api.domain.item.service;
 
 import static com.mm.api.exception.ErrorCode.*;
 
@@ -7,11 +7,11 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mm.api.domain.item.dto.request.ItemCreateRequest;
+import com.mm.api.domain.item.dto.request.ItemUpdateRequest;
+import com.mm.api.domain.item.dto.response.ItemDetailResponse;
+import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.api.exception.CustomException;
-import com.mm.api.item.dto.request.ItemCreateRequest;
-import com.mm.api.item.dto.request.ItemUpdateRequest;
-import com.mm.api.item.dto.response.ItemDetailResponse;
-import com.mm.api.item.dto.response.ItemResponse;
 import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemCategoryType;
 import com.mm.coredomain.domain.ItemImage;

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: infra-rdb, security
+    include: infra-rdb, redis, security
     active: dev
 
 server:
