@@ -28,10 +28,23 @@ public class Member extends BaseEntity {
 
 	private Integer point;
 
+	private String account;
+
 	private String accountBank;
 
 	private MemberStatus memberStatus;
 
+	private OAuthProvider provider;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Groups groups;
+
+	public void updateMemberAccount(String account, String accountBank) {
+		this.account = account;
+		this.accountBank = accountBank;
+	}
+
+	public void updateMemberName(String name) {
+		this.name = name;
+	}
 }

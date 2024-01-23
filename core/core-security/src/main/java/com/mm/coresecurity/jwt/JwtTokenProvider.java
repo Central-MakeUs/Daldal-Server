@@ -15,8 +15,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import com.mm.coredomain.domain.OAuthProvider;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
-import com.mm.coresecurity.oauth.OAuthProvider;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

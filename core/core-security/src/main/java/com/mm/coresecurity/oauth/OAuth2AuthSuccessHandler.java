@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mm.coredomain.domain.Groups;
 import com.mm.coredomain.domain.Member;
+import com.mm.coredomain.domain.OAuthProvider;
 import com.mm.coredomain.repository.GroupRepository;
 import com.mm.coredomain.repository.MemberRepository;
+import com.mm.coreinfraredis.repository.RedisRefreshTokenRepository;
 import com.mm.coresecurity.jwt.JwtTokenProvider;
 import com.mm.coresecurity.util.HttpResponseUtil;
 
@@ -33,7 +35,8 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final MemberRepository memberRepository;
 	private final GroupRepository groupRepository;
-	
+	private final RedisRefreshTokenRepository redisRefreshTokenRepository;
+
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 		Authentication authentication) throws IOException, ServletException {
@@ -58,7 +61,8 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
 
 		String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
 		String refreshToken = jwtTokenProvider.generateRefreshToken();
-		// TODO refreshToken 저장 추가 (레디스)
+
+		redisRefreshTokenRepository.save(refreshToken, member.getId());
 
 		Map<String, String> tokenMap = new HashMap<>();
 		tokenMap.put("accessToken", accessToken);

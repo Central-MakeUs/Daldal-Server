@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import net.minidev.json.annotate.JsonIgnore;
 
+import com.mm.coredomain.domain.OAuthProvider;
+
 import lombok.Builder;
 import lombok.Getter;
 

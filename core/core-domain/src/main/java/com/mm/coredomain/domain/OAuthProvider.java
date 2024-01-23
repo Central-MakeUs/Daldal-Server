@@ -1,4 +1,4 @@
-package com.mm.coresecurity.oauth;
+package com.mm.coredomain.domain;
 
 public enum OAuthProvider {
 	KAKAO, APPLE
