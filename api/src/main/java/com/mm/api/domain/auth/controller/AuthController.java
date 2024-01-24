@@ -10,18 +10,23 @@ import com.mm.api.domain.auth.dto.request.RefreshTokenRequest;
 import com.mm.api.domain.auth.dto.response.TokenResponse;
 import com.mm.api.domain.auth.service.AuthService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "회원 인증", description = "회원 인증 관련 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
 	private final AuthService authService;
 
+	@Operation(summary = "oAuth 로그인을 합니다. 현재 provider는 kakao만 제공됩니다.")
 	@GetMapping("/oauth2/authorization/{oauth2-provider}")
 	public void login() {
 		// oauth2 로그인
 	}
 
+	@Operation(summary = "access token을 갱신합니다.")
 	@PostMapping("/api/v1/auth/refresh-access-token")
 	public ResponseEntity<TokenResponse> refreshAccessToken(@RequestBody RefreshTokenRequest request) {
 		TokenResponse tokenResponse = authService.refreshAccessToken(request);

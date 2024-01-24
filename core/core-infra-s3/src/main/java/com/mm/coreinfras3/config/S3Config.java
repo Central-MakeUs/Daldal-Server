@@ -11,7 +11,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 @Configuration
 public class S3Config {
-	@Value("${cloud.aws.s3.region.static}")
+	@Value("${cloud.aws.region.static}")
 	private String region;
 
 	@Value("${cloud.aws.credentials.access-key}")

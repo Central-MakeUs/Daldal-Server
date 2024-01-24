@@ -13,8 +13,10 @@ import com.mm.api.domain.member.dto.request.UpdateMemberAccountRequest;
 import com.mm.api.domain.member.dto.response.MemberInfoResponse;
 import com.mm.api.domain.member.service.MemberService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "회원", description = "회원 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class MemberController {
 	private final MemberService memberService;
 
 	// 관리자 권한 + 자신만
-	
+
 	@PatchMapping("/members/{memberId}/account")
 	public ResponseEntity<?> updateMemberAccount(@PathVariable Long memberId,
 		@RequestBody UpdateMemberAccountRequest request) {

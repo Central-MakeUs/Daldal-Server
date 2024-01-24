@@ -17,8 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "구매 인증", description = "구매 인증 관련 API 입니다.")
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -26,12 +29,14 @@ public class BuyController {
 	private final BuyService buyService;
 
 	// 관리자만
+	@Operation(summary = "구매 인증을 페이지 단위로 가져옵니다.")
 	@GetMapping("/buys")
 	public ResponseEntity<?> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		List<BuyResponse> responses = buyService.getBuys(page);
 		return ResponseEntity.ok(responses);
 	}
 
+	@Operation(summary = "구매 인증 상태를 변경합니다.")
 	@PatchMapping("/buys/{buyId}/refund-status")
 	public ResponseEntity<?> updateBuyRefundStatus(@PathVariable Long buyId,
 		@RequestParam String refundStatus) {
@@ -40,6 +45,7 @@ public class BuyController {
 	}
 
 	// 관리자 + 회원(자신만)
+	@Operation(summary = "구매 인증을 삭제합니다.")
 	@DeleteMapping("/buys/{buyId}")
 	public ResponseEntity<?> deleteBuy(@PathVariable Long buyId) {
 		buyService.deleteBuy(buyId);
@@ -47,6 +53,7 @@ public class BuyController {
 	}
 
 	// 회원만
+	@Operation(summary = "구매 인증을 작성합니다.")
 	@PostMapping("/buys/{memberId}/{itemId}")
 	public ResponseEntity<?> postBuy(@PathVariable Long memberId, @PathVariable Long itemId,
 		@RequestPart(value = "file", required = true) MultipartFile file) {
