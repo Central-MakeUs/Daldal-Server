@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mm.api.domain.buy.service.BuyService;
 
@@ -31,8 +33,9 @@ public class BuyController {
 
 	// 회원만
 	@PostMapping("/buys/{memberId}/{itemId}")
-	public void postBuy(@PathVariable Long memberId, @PathVariable Long itemId) {
-		buyService.postBuy(memberId, itemId);
+	public void postBuy(@PathVariable Long memberId, @PathVariable Long itemId,
+		@RequestPart(value = "file", required = true) MultipartFile file) {
+		buyService.postBuy(memberId, itemId, file);
 
 	}
 }

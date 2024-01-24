@@ -5,6 +5,7 @@ import static com.mm.api.exception.ErrorCode.*;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -15,6 +16,7 @@ import com.mm.coredomain.domain.RefundStatus;
 import com.mm.coredomain.repository.BuyRepository;
 import com.mm.coredomain.repository.ItemRepository;
 import com.mm.coredomain.repository.MemberRepository;
+import com.mm.coreinfras3.util.S3Service;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,12 +26,13 @@ public class BuyService {
 	private final BuyRepository buyRepository;
 	private final MemberRepository memberRepository;
 	private final ItemRepository itemRepository;
+	private final S3Service s3Service;
 
-	public void postBuy(Long memberId, Long itemId) {
+	public void postBuy(Long memberId, Long itemId, MultipartFile file) {
 		Member member = getMember(memberId);
 		Item item = getItem(itemId);
 
-		// TODO 인증샷 업로드
+		String url = s3Service.uploadFileToS3(file, memberId, itemId);
 
 		Buy buy = Buy.builder()
 			.member(member)
@@ -38,6 +41,7 @@ public class BuyService {
 			.refund(item.getRefund())
 			.refundStatus(RefundStatus.IN_PROGRESS)
 			.uploadTime(LocalDateTime.now())
+			.certImageUrl(url)
 			.build();
 
 		buyRepository.save(buy);
