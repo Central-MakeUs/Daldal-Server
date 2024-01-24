@@ -5,8 +5,10 @@ import static com.mm.api.exception.ErrorCode.*;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
 import com.mm.coredomain.domain.Buy;
@@ -21,6 +23,7 @@ import com.mm.coreinfras3.util.S3Service;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class BuyService {
 	private final BuyRepository buyRepository;
@@ -28,7 +31,7 @@ public class BuyService {
 	private final ItemRepository itemRepository;
 	private final S3Service s3Service;
 
-	public void postBuy(Long memberId, Long itemId, MultipartFile file) {
+	public BuyResponse postBuy(Long memberId, Long itemId, MultipartFile file) {
 		Member member = getMember(memberId);
 		Item item = getItem(itemId);
 
@@ -44,7 +47,7 @@ public class BuyService {
 			.certImageUrl(url)
 			.build();
 
-		buyRepository.save(buy);
+		return BuyResponse.of(buyRepository.save(buy));
 	}
 
 	private Item getItem(Long id) {

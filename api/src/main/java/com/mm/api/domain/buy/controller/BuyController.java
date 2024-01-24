@@ -1,5 +1,6 @@
 package com.mm.api.domain.buy.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
 
 import lombok.RequiredArgsConstructor;
@@ -33,9 +35,9 @@ public class BuyController {
 
 	// 회원만
 	@PostMapping("/buys/{memberId}/{itemId}")
-	public void postBuy(@PathVariable Long memberId, @PathVariable Long itemId,
+	public ResponseEntity<?> postBuy(@PathVariable Long memberId, @PathVariable Long itemId,
 		@RequestPart(value = "file", required = true) MultipartFile file) {
-		buyService.postBuy(memberId, itemId, file);
-
+		BuyResponse buyResponse = buyService.postBuy(memberId, itemId, file);
+		return ResponseEntity.ok(buyResponse);
 	}
 }
