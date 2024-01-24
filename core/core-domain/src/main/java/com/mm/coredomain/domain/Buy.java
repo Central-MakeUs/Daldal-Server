@@ -1,27 +1,49 @@
 package com.mm.coredomain.domain;
 
-import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Buy extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Lob
-    private String redirectUrl;
+	@Lob
+	private String redirectUrl;
 
-    private LocalDateTime orderTime;
+	private LocalDateTime uploadTime;
 
-    private Integer refund;
+	private Integer refund;
 
-    private RefundStatus refundStatus;
+	private RefundStatus refundStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+	@Lob
+	private String certImageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Item item;
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member member;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Item item;
+
+	public void updateRefundStatus(RefundStatus refundStatus) {
+		this.refundStatus = refundStatus;
+	}
 }

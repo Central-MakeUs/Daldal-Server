@@ -1,0 +1,7 @@
+### 토큰 재발급 요청
+POST http://localhost:8080/api/v1/auth/refresh-access-token
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MDYwMDc0MzYsImV4cCI6MTcwNjI2NjYzNn0.7Cnv74WOMVBEKR6K33-EtTyB84DNMuA_FpD1OnduO399LA_tVhCK34V80z1f2dOS9U-CM9D3OqPGLYOmUWKjFQ"
+}

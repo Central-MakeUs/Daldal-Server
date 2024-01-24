@@ -1,23 +1,50 @@
 package com.mm.coredomain.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String name;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String email;
+	private String name;
 
-    private String password;
+	private String email;
 
-    private Integer point;
+	private Integer point;
 
-    private String accountBank;
+	private String account;
 
-    private MemberStatus memberStatus;
+	private String accountBank;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Group group;
+	private MemberStatus memberStatus;
+
+	private OAuthProvider provider;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Groups groups;
+
+	public void updateMemberAccount(String account, String accountBank) {
+		this.account = account;
+		this.accountBank = accountBank;
+	}
+
+	public void updateMemberName(String name) {
+		this.name = name;
+	}
 }

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EntityScan("com.pgms.coredomain")
+@EntityScan("com.mm.coredomain")
 @EnableJpaAuditing
 @EnableTransactionManagement
 @EnableJpaRepositories("com.mm.coredomain")

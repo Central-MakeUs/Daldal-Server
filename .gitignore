@@ -8,6 +8,7 @@ build/
 ### yml
 **/application-infra-rdb.yml
 **/application-security.yml
+**/application-s3.yml
 
 ### STS ###
 .apt_generated

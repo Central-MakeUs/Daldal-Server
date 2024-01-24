@@ -7,7 +7,11 @@ jar { enabled = false }
 
 dependencies {
     implementation project(':core:core-domain');
-    implementation project(':core:core-infra:core-infra-qdsl');
+    implementation project(':core:core-infra-rdb');
+    implementation project(':core:core-infra-qdsl');
+    implementation project(':core:core-infra-redis');
+    implementation project(':core:core-infra-s3');
+    implementation project(':core:core-security');
 
     // validation
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -20,6 +24,15 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    // security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
     // sentry
     implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.1.0'
