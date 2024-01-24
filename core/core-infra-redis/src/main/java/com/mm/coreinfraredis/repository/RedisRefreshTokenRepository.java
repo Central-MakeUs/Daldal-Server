@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RedisRefreshTokenRepository {
 	private final RedisTemplate redisTemplate;
-	private final static long REFRESH_TOKEN_EXPIRE_LONG = 259200L;
+	private static final long REFRESH_TOKEN_EXPIRE_LONG = 259200L;
 
 	public void save(String refreshToken, Long memberId) {
 		ValueOperations<String, Long> valueOperations = redisTemplate.opsForValue();
