@@ -42,4 +42,8 @@ public class Buy extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Item item;
+
+	public void updateRefundStatus(RefundStatus refundStatus) {
+		this.refundStatus = refundStatus;
+	}
 }

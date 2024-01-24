@@ -1,6 +1,9 @@
 package com.mm.api.domain.buy.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,13 +27,23 @@ public class BuyController {
 
 	// 관리자만
 	@GetMapping("/buys")
-	public void getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
-
+	public ResponseEntity<?> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		List<BuyResponse> responses = buyService.getBuys(page);
+		return ResponseEntity.ok(responses);
 	}
 
 	@PatchMapping("/buys/{buyId}/refund-status")
-	public void updateBuyRefundStatus(@RequestParam String refundStatus) {
+	public ResponseEntity<?> updateBuyRefundStatus(@PathVariable Long buyId,
+		@RequestParam String refundStatus) {
+		BuyResponse response = buyService.updateBuyRefundStatus(buyId, refundStatus);
+		return ResponseEntity.ok(response);
+	}
 
+	// 관리자 + 회원(자신만)
+	@DeleteMapping("/buys/{buyId}")
+	public ResponseEntity<?> deleteBuy(@PathVariable Long buyId) {
+		buyService.deleteBuy(buyId);
+		return ResponseEntity.noContent().build();
 	}
 
 	// 회원만
