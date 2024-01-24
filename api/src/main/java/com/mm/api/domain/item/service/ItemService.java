@@ -53,8 +53,7 @@ public class ItemService {
 
 	@Transactional(readOnly = true)
 	public ItemDetailResponse getItemDetail(Long id) {
-		Item item = itemRepository.findById(id)
-			.orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+		Item item = getItem(id);
 
 		List<String> images = item.getItemImages().stream()
 			.map(ItemImage::getUrl)
@@ -67,8 +66,7 @@ public class ItemService {
 	}
 
 	public ItemResponse updateItem(Long id, ItemUpdateRequest request) {
-		Item item = itemRepository.findById(id)
-			.orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+		Item item = getItem(id);
 
 		ItemUpdate itemUpdate = getItemUpdate(request);
 		item.updateItem(itemUpdate);
@@ -84,6 +82,11 @@ public class ItemService {
 
 	public void deleteItem(Long id) {
 		itemRepository.deleteById(id);
+	}
+
+	private Item getItem(Long id) {
+		return itemRepository.findById(id)
+			.orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
 	}
 
 	private ItemUpdate getItemUpdate(ItemUpdateRequest request) {

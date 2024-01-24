@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ItemController {
 	private final ItemService itemService;
 
+	// 관리자 권한
 	@PostMapping("/items")
 	public ResponseEntity<?> createItem(@RequestBody ItemCreateRequest request) {
 		ItemResponse response = itemService.createItem(request);
@@ -44,8 +45,7 @@ public class ItemController {
 		return ResponseEntity.noContent().build();
 	}
 
-	// 관리자 권한
-
+	// 권한 X
 	@GetMapping("/items")
 	public ResponseEntity<?> getItems(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		List<ItemResponse> responses = itemService.getItems(page);

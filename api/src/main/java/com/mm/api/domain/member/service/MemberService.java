@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 	private final MemberRepository memberRepository;
 
+	// 관리자 + 회원 권한(자신만)
 	public void updateMemberAccount(Long memberId, UpdateMemberAccountRequest request) {
 		Member member = getMember(memberId);
 		member.updateMemberAccount(request.account(), request.accountBank());
