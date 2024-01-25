@@ -21,6 +21,10 @@ public class RedisRefreshTokenRepository {
 		redisTemplate.expire(refreshToken, 60L, TimeUnit.SECONDS);
 	}
 
+	public void delete(String refreshToken) {
+		redisTemplate.delete(refreshToken);
+	}
+
 	public Optional<Long> findByRefreshToken(String refreshToken) {
 		ValueOperations<String, Long> valueOperations = redisTemplate.opsForValue();
 		Long memberId = valueOperations.get(refreshToken);

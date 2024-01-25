@@ -41,6 +41,10 @@ public class AuthService {
 		return new TokenResponse(accessToken, refreshToken);
 	}
 
+	public void logout(RefreshTokenRequest request) {
+		redisRefreshTokenRepository.delete(request.refreshToken());
+	}
+
 	private OAuth2UserDetails createOauth2UserDetails(Member member) {
 		List<SimpleGrantedAuthority> authorities = member.getGroups()
 			.getGroupPermissions()
