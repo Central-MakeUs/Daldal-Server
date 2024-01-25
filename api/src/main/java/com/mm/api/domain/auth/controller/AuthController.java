@@ -26,6 +26,13 @@ public class AuthController {
 		// oauth2 로그인
 	}
 
+	@Operation(summary = "")
+	@PostMapping("/oauth2/logout")
+	public ResponseEntity<?> logout(@RequestBody RefreshTokenRequest request) {
+		authService.logout(request);
+		return ResponseEntity.noContent().build();
+	}
+
 	@Operation(summary = "access token을 갱신합니다.")
 	@PostMapping("/api/v1/auth/refresh-access-token")
 	public ResponseEntity<TokenResponse> refreshAccessToken(@RequestBody RefreshTokenRequest request) {
