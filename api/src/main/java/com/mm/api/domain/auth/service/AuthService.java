@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.mm.api.domain.auth.dto.request.RefreshTokenRequest;
 import com.mm.api.domain.auth.dto.response.TokenResponse;
+import com.mm.api.domain.member.dto.response.MemberInfoResponse;
+import com.mm.api.domain.member.service.MemberService;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
 import com.mm.coredomain.domain.Member;
@@ -23,6 +25,8 @@ public class AuthService {
 	private final RedisRefreshTokenRepository redisRefreshTokenRepository;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final MemberRepository memberRepository;
+
+	private final MemberService memberService;
 
 	public TokenResponse refreshAccessToken(RefreshTokenRequest request) {
 		Long memberId = redisRefreshTokenRepository.findByRefreshToken(request.refreshToken())
@@ -43,6 +47,10 @@ public class AuthService {
 
 	public void logout(RefreshTokenRequest request) {
 		redisRefreshTokenRepository.delete(request.refreshToken());
+	}
+
+	public MemberInfoResponse getMe(OAuth2UserDetails userDetails) {
+		return memberService.getMemberInfo(userDetails.getId());
 	}
 
 	private OAuth2UserDetails createOauth2UserDetails(Member member) {
