@@ -5,3 +5,15 @@ Content-Type: application/json
 {
   "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MDYwMDc0MzYsImV4cCI6MTcwNjI2NjYzNn0.7Cnv74WOMVBEKR6K33-EtTyB84DNMuA_FpD1OnduO399LA_tVhCK34V80z1f2dOS9U-CM9D3OqPGLYOmUWKjFQ"
 }
+
+### 로그인 사용자 정보 가져오기
+GET http://localhost:8080/api/v1/auth/me
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6MSwiaWF0IjoxNzA2Mjg2NDczLCJleHAiOjE3MDYyODgyNzMsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0.Lz-kxUT-JtOJ6cLA3OtF-j8_5aL-ChECmbb6IXH0OtMDSxWlIPKHP5BBuFC9l-xPdY59xlfw-HMQjt2I-vm72A
+
+### 로그아웃
+POST http://localhost:8080/api/v1/auth/logout
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MDYyODY5NTgsImV4cCI6MTcwNjU0NjE1OH0.KPq58t2mWtY5xp-Z-AiBUogIqmWCrXwKuPkCeS8bgr4IyGZwyvttcr8-4tzlSjFLPQuHhQDBs3jBQBSsGdvUkw"
+}
