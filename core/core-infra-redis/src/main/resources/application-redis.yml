@@ -17,3 +17,4 @@ spring:
     redis:
       port: 6379
       host: redis
+  핑
