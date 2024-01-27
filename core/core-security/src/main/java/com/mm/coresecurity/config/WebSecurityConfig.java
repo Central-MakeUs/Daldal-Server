@@ -42,8 +42,7 @@ public class WebSecurityConfig {
 					.userInfoEndpoint()
 					.userService(oAuth2UserService))
 
-			.authorizeHttpRequests(auth -> auth
-				.anyRequest().permitAll())
+			.authorizeHttpRequests().anyRequest().permitAll().and()
 
 			.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
 			.exceptionHandling(exceptionHandlingConfigurer -> {
