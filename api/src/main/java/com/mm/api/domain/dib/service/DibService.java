@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
 import com.mm.coredomain.domain.Dib;
@@ -15,6 +16,7 @@ import com.mm.coredomain.domain.Member;
 import com.mm.coredomain.repository.DibRepository;
 import com.mm.coredomain.repository.ItemRepository;
 import com.mm.coredomain.repository.MemberRepository;
+import com.mm.coreinfraqdsl.repository.DibCustomRepository;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class DibService {
 	private final DibRepository dibRepository;
 	private final MemberRepository memberRepository;
 	private final ItemRepository itemRepository;
+	private final DibCustomRepository dibCustomRepository;
 
 	@Transactional(readOnly = true)
 	public List<Boolean> getDib(List<Item> items, OAuth2UserDetails userDetails) {
@@ -65,6 +68,15 @@ public class DibService {
 		Dib dib = dibRepository.findByMemberAndItem(member, item)
 			.orElseThrow(() -> new CustomException(DIB_NOT_FOUND));
 		dibRepository.delete(dib);
+	}
+
+	public List<ItemResponse> getDibsMe(Integer page, OAuth2UserDetails userDetails) {
+		Member member = getMember(userDetails.getId());
+		List<Dib> dibs = dibCustomRepository.getDibsByPage(page, member);
+		return dibs.stream()
+			.map(dib ->
+				ItemResponse.of(dib.getItem(), true))
+			.toList();
 	}
 
 	private boolean isDibExist(Member member, Item item) {
