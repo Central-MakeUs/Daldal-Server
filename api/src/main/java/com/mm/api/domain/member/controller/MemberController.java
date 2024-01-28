@@ -26,7 +26,7 @@ public class MemberController {
 
 	// 관리자 권한 + 자신만
 
-	@Operation(summary = "사용자 계정 정보를 업데이트합니다.")
+	@Operation(summary = "사용자 계좌 정보를 업데이트합니다.")
 	@PatchMapping("/members/{memberId}/account")
 	public ResponseEntity<?> updateMemberAccount(@PathVariable Long memberId,
 		@RequestBody UpdateMemberAccountRequest request) {

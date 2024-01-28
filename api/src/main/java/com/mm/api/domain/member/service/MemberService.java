@@ -21,7 +21,7 @@ public class MemberService {
 	// 관리자 + 회원 권한(자신만)
 	public void updateMemberAccount(Long memberId, UpdateMemberAccountRequest request) {
 		Member member = getMember(memberId);
-		member.updateMemberAccount(request.account(), request.accountBank());
+		member.updateMemberAccount(request.depositorName(), request.account(), request.accountBank());
 	}
 
 	public void updateMemberName(Long memberId, String name) {
