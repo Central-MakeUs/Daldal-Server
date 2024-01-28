@@ -49,7 +49,7 @@ public class BuyController {
 	}
 
 	@Operation(summary = "구매 인증을 미승인 처리합니다.")
-	@PatchMapping("/buys/{buyId}/refund-status")
+	@PatchMapping("/buys/{buyId}/reject")
 	public ResponseEntity<?> rejectBuyRefundStatus(@PathVariable Long buyId,
 		@RequestBody RejectBuyRefundStatusRequest request) {
 		BuyResponse response = buyService.rejectBuyRefundStatus(buyId, request);
