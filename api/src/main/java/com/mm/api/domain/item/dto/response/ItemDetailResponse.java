@@ -14,8 +14,9 @@ public record ItemDetailResponse(Long id,
 								 Double rating,
 								 String thumbnailUrl,
 								 List<String> imageUrls,
-								 List<String> videoUrls) {
-	public static ItemDetailResponse of(Item item, List<String> imageUrls, List<String> videoUrls) {
+								 List<String> videoUrls,
+								 Boolean isDib) {
+	public static ItemDetailResponse of(Item item, List<String> imageUrls, List<String> videoUrls, Boolean isDib) {
 		return new ItemDetailResponse(
 			item.getId(),
 			item.getDetail(),
@@ -26,7 +27,8 @@ public record ItemDetailResponse(Long id,
 			item.getRating(),
 			item.getThumbnailUrl(),
 			imageUrls,
-			videoUrls
+			videoUrls,
+			isDib
 		);
 	}
 }

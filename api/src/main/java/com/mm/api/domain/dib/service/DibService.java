@@ -25,7 +25,15 @@ public class DibService {
 	private final MemberRepository memberRepository;
 	private final ItemRepository itemRepository;
 
-	public List<Boolean> getDib(Member member, List<Item> items) {
+	public List<Boolean> getDib(List<Item> items, OAuth2UserDetails userDetails) {
+		Long memberId = userDetails.getId();
+		if (memberId == null) {
+			return items.stream()
+				.map(item -> false)
+				.toList();
+		}
+
+		Member member = getMember(memberId);
 		return items.stream()
 			.map(item -> isDibExist(member, item))
 			.toList();
