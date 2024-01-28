@@ -26,13 +26,13 @@ public class DibService {
 	private final ItemRepository itemRepository;
 
 	public List<Boolean> getDib(List<Item> items, OAuth2UserDetails userDetails) {
-		Long memberId = userDetails.getId();
-		if (memberId == null) {
+		if (userDetails == null) {
 			return items.stream()
 				.map(item -> false)
 				.toList();
 		}
 
+		Long memberId = userDetails.getId();
 		Member member = getMember(memberId);
 		return items.stream()
 			.map(item -> isDibExist(member, item))

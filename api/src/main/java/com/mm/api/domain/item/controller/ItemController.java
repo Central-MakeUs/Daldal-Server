@@ -57,8 +57,9 @@ public class ItemController {
 	@Operation(summary = "상품 글을 페이지 단위로 읽어옵니다.")
 	@GetMapping("/items")
 	public ResponseEntity<?> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
+		@RequestParam(required = false) String itemCategoryType,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		List<ItemResponse> responses = itemService.getItems(page, userDetails);
+		List<ItemResponse> responses = itemService.getItems(page, userDetails, itemCategoryType);
 		return ResponseEntity.ok(responses);
 	}
 

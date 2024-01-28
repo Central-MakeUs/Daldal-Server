@@ -47,8 +47,8 @@ public class ItemService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ItemResponse> getItems(Integer page, OAuth2UserDetails userDetails) {
-		List<Item> items = itemCustomRepository.getItemsByPage(page);
+	public List<ItemResponse> getItems(Integer page, OAuth2UserDetails userDetails, String itemCategoryType) {
+		List<Item> items = itemCustomRepository.getItemsByPage(page, ItemCategoryType.of(itemCategoryType));
 
 		List<Boolean> dibs = dibService.getDib(items, userDetails);
 
