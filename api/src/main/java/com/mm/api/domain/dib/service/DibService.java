@@ -5,6 +5,7 @@ import static com.mm.api.exception.ErrorCode.*;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -19,12 +20,14 @@ import com.mm.coresecurity.oauth.OAuth2UserDetails;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DibService {
 	private final DibRepository dibRepository;
 	private final MemberRepository memberRepository;
 	private final ItemRepository itemRepository;
 
+	@Transactional(readOnly = true)
 	public List<Boolean> getDib(List<Item> items, OAuth2UserDetails userDetails) {
 		if (userDetails == null) {
 			return items.stream()

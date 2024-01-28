@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -21,6 +22,7 @@ import com.mm.coredomain.repository.ItemRepository;
 import com.mm.coredomain.repository.MemberRepository;
 import com.mm.coreinfraqdsl.repository.BuyCustomRepository;
 import com.mm.coreinfras3.util.S3Service;
+import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -70,6 +72,20 @@ public class BuyService {
 	public List<BuyResponse> getBuys(Integer page) {
 		List<Buy> buys = buyCustomRepository.getBuysByPage(page);
 		return buys.stream()
+			.map(BuyResponse::of)
+			.toList();
+	}
+
+	public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {
+		Buy buy = getBuy(buyId);
+		buy.rejectRefundStatus(request.rejectReason());
+		return BuyResponse.of(buy);
+	}
+
+	public List<BuyResponse> getBuysMe(OAuth2UserDetails userDetails) {
+		Member member = getMember(userDetails.getId());
+		return buyRepository.findAllByMember(member)
+			.stream()
 			.map(BuyResponse::of)
 			.toList();
 	}

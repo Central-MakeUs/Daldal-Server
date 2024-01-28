@@ -4,7 +4,7 @@ public enum RefundStatus {
 	UNDER_EXAMINATION,
 	IN_PROGRESS,
 	COMPLETED,
-	REFUSED;
+	REJECTED;
 
 	public static RefundStatus of(String input) {
 		try {
