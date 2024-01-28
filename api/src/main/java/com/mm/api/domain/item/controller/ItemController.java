@@ -63,7 +63,7 @@ public class ItemController {
 		return ResponseEntity.ok(responses);
 	}
 
-	@Operation(summary = "상품 글의 상세 내용을 읽어옵니다.")
+	@Operation(summary = "상품 글의 상세 내용한을 읽어옵니다.")
 	@GetMapping("/items/{id}")
 	public ResponseEntity<?> getItemDetail(@RequestParam Long id,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {

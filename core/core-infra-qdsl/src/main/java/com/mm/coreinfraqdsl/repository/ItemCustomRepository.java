@@ -6,5 +6,5 @@ import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemCategoryType;
 
 public interface ItemCustomRepository {
-	List<Item> getItemsByPage(Integer integer, ItemCategoryType categoryType);
+	List<Item> getItemsByPage(Integer page, ItemCategoryType categoryType);
 }
