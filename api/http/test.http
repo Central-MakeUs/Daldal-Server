@@ -17,3 +17,6 @@ Content-Type: application/json
 {
   "refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MDYyODY5NTgsImV4cCI6MTcwNjU0NjE1OH0.KPq58t2mWtY5xp-Z-AiBUogIqmWCrXwKuPkCeS8bgr4IyGZwyvttcr8-4tzlSjFLPQuHhQDBs3jBQBSsGdvUkw"
 }
+
+### 상품 페이지 조회
+GET http://localhost:8080/api/v1/items

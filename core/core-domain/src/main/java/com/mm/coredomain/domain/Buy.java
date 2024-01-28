@@ -34,6 +34,8 @@ public class Buy extends BaseEntity {
 
 	private RefundStatus refundStatus;
 
+	private String rejectReason;
+
 	@Lob
 	private String certImageUrl;
 
@@ -45,5 +47,10 @@ public class Buy extends BaseEntity {
 
 	public void updateRefundStatus(RefundStatus refundStatus) {
 		this.refundStatus = refundStatus;
+	}
+
+	public void rejectRefundStatus(String rejectReason) {
+		this.refundStatus = RefundStatus.REJECTED;
+		this.rejectReason = rejectReason;
 	}
 }

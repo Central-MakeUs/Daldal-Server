@@ -3,6 +3,7 @@ package com.mm.api.domain.item.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import com.mm.api.domain.item.dto.request.ItemUpdateRequest;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
 import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.api.domain.item.service.ItemService;
+import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,15 +56,18 @@ public class ItemController {
 	// 권한 X
 	@Operation(summary = "상품 글을 페이지 단위로 읽어옵니다.")
 	@GetMapping("/items")
-	public ResponseEntity<?> getItems(@RequestParam(required = false, defaultValue = "1") Integer page) {
-		List<ItemResponse> responses = itemService.getItems(page);
+	public ResponseEntity<?> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
+		@RequestParam(required = false) String itemCategoryType,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+		List<ItemResponse> responses = itemService.getItems(page, userDetails, itemCategoryType);
 		return ResponseEntity.ok(responses);
 	}
 
 	@Operation(summary = "상품 글의 상세 내용을 읽어옵니다.")
 	@GetMapping("/items/{id}")
-	public ResponseEntity<?> getItemDetail(@RequestParam Long id) {
-		ItemDetailResponse response = itemService.getItemDetail(id);
+	public ResponseEntity<?> getItemDetail(@RequestParam Long id,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+		ItemDetailResponse response = itemService.getItemDetail(id, userDetails);
 		return ResponseEntity.ok(response);
 	}
 }

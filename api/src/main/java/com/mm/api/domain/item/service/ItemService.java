@@ -3,10 +3,12 @@ package com.mm.api.domain.item.service;
 import static com.mm.api.exception.ErrorCode.*;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mm.api.domain.dib.service.DibService;
 import com.mm.api.domain.item.dto.request.ItemCreateRequest;
 import com.mm.api.domain.item.dto.request.ItemUpdateRequest;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
@@ -19,6 +21,7 @@ import com.mm.coredomain.domain.ItemUpdate;
 import com.mm.coredomain.domain.ItemVideo;
 import com.mm.coredomain.repository.ItemRepository;
 import com.mm.coreinfraqdsl.repository.ItemCustomRepository;
+import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class ItemService {
 	private final ItemRepository itemRepository;
 	private final ItemCustomRepository itemCustomRepository;
+	private final DibService dibService;
 
 	public ItemResponse createItem(ItemCreateRequest request) {
 		Item item = request.toEntity();
@@ -39,20 +43,23 @@ public class ItemService {
 		item.setItemVideos(itemVideos);
 
 		Item savedItem = itemRepository.save(item);
-		return ItemResponse.of(savedItem);
+		return ItemResponse.of(savedItem, false);
 	}
 
 	@Transactional(readOnly = true)
-	public List<ItemResponse> getItems(Integer page) {
-		List<Item> items = itemCustomRepository.getItemsByPage(page);
+	public List<ItemResponse> getItems(Integer page, OAuth2UserDetails userDetails, String itemCategoryType) {
+		List<Item> items = itemCustomRepository.getItemsByPage(page, ItemCategoryType.of(itemCategoryType));
 
-		return items.stream()
-			.map(ItemResponse::of)
+		List<Boolean> dibs = dibService.getDib(items, userDetails);
+
+		return IntStream.range(0, items.size())
+			.mapToObj(i ->
+				ItemResponse.of(items.get(i), dibs.get(i)))
 			.toList();
 	}
 
 	@Transactional(readOnly = true)
-	public ItemDetailResponse getItemDetail(Long id) {
+	public ItemDetailResponse getItemDetail(Long id, OAuth2UserDetails userDetails) {
 		Item item = getItem(id);
 
 		List<String> images = item.getItemImages().stream()
@@ -62,7 +69,9 @@ public class ItemService {
 			.map(ItemVideo::getUrl)
 			.toList();
 
-		return ItemDetailResponse.of(item, images, videos);
+		List<Boolean> dibs = dibService.getDib(List.of(item), userDetails);
+
+		return ItemDetailResponse.of(item, images, videos, dibs.get(0));
 	}
 
 	public ItemResponse updateItem(Long id, ItemUpdateRequest request) {
@@ -77,7 +86,7 @@ public class ItemService {
 		item.setItemImages(itemImages);
 		item.setItemVideos(itemVideos);
 
-		return ItemResponse.of(item);
+		return ItemResponse.of(item, false);
 	}
 
 	public void deleteItem(Long id) {

@@ -13,6 +13,7 @@ public record BuyResponse(Long id,
 						  LocalDateTime uploadTime,
 						  Integer refund,
 						  RefundStatus refundStatus,
+						  String rejectReason,
 						  String certImageUrl) {
 	public static BuyResponse of(Buy buy) {
 		return BuyResponse.builder()
@@ -21,6 +22,7 @@ public record BuyResponse(Long id,
 			.uploadTime(buy.getUploadTime())
 			.refund(buy.getRefund())
 			.refundStatus(buy.getRefundStatus())
+			.rejectReason(buy.getRejectReason())
 			.certImageUrl(buy.getCertImageUrl())
 			.build();
 	}
