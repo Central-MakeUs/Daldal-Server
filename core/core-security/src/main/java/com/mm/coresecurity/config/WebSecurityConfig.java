@@ -1,5 +1,10 @@
 package com.mm.coresecurity.config;
 
+import static org.springframework.http.HttpMethod.*;
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.*;
+
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.mm.coresecurity.jwt.JwtAccessDeniedHandler;
 import com.mm.coresecurity.jwt.JwtAuthenticationEntryPoint;
@@ -51,6 +57,7 @@ public class WebSecurityConfig {
 
 			.authorizeHttpRequests(authorize ->
 				authorize
+					.requestMatchers(oauthRequests()).authenticated()
 					.anyRequest().permitAll())
 
 			.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
@@ -60,6 +67,14 @@ public class WebSecurityConfig {
 			})
 
 			.build();
+	}
+
+	private RequestMatcher[] oauthRequests() {
+		List<RequestMatcher> requestMatchers = List.of(
+			antMatcher(GET, "/login/oauth2/code/kakao"),
+			antMatcher(GET, "/oauth2/authorization/kakao")
+		);
+		return requestMatchers.toArray(RequestMatcher[]::new);
 	}
 }
 

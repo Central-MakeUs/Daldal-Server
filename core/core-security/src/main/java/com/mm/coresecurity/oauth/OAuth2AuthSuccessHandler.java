@@ -68,6 +68,7 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
 		tokenMap.put("accessToken", accessToken);
 		tokenMap.put("refreshToken", refreshToken);
 
+		response.addHeader("Authorization", "Bearer " + accessToken);
 		HttpResponseUtil.writeSuccessResponse(response, tokenMap);
 	}
 
