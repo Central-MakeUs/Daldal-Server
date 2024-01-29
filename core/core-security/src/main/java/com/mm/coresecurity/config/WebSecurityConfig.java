@@ -42,7 +42,16 @@ public class WebSecurityConfig {
 					.userInfoEndpoint()
 					.userService(oAuth2UserService))
 
-			.authorizeHttpRequests().anyRequest().permitAll().and()
+			// .securityMatchers(matchers -> matchers
+			// 	.requestMatchers(
+			// 		antMatcher("/login"),
+			// 		antMatcher("/login/oauth2/code/kakao"),
+			// 		antMatcher("/oauth2/authorization/kakao")
+			// 	))
+
+			.authorizeHttpRequests(authorize ->
+				authorize
+					.anyRequest().authenticated())
 
 			.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
 			.exceptionHandling(exceptionHandlingConfigurer -> {
@@ -53,4 +62,5 @@ public class WebSecurityConfig {
 			.build();
 	}
 }
+
 
