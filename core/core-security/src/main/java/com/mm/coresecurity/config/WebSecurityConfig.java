@@ -51,7 +51,7 @@ public class WebSecurityConfig {
 
 			.authorizeHttpRequests(authorize ->
 				authorize
-					.anyRequest().authenticated())
+					.anyRequest().permitAll())
 
 			.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
 			.exceptionHandling(exceptionHandlingConfigurer -> {
