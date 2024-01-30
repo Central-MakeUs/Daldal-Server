@@ -44,20 +44,15 @@ public class WebSecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.oauth2Login(oauth2Configurer ->
 				oauth2Configurer
+					.redirectionEndpoint(
+						redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/oauth2/callback/*"))
 					.successHandler(oAuth2AuthSuccessHandler)
 					.userInfoEndpoint()
 					.userService(oAuth2UserService))
 
-			// .securityMatchers(matchers -> matchers
-			// 	.requestMatchers(
-			// 		antMatcher("/login"),
-			// 		antMatcher("/login/oauth2/code/kakao"),
-			// 		antMatcher("/oauth2/authorization/kakao")
-			// 	))
-
 			.authorizeHttpRequests(authorize ->
 				authorize
-					.requestMatchers(oauthRequests()).authenticated()
+					// .requestMatchers(oauthRequests()).authenticated()
 					.anyRequest().permitAll())
 
 			.addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
@@ -71,8 +66,7 @@ public class WebSecurityConfig {
 
 	private RequestMatcher[] oauthRequests() {
 		List<RequestMatcher> requestMatchers = List.of(
-			antMatcher(GET, "/login/oauth2/code/kakao"),
-			antMatcher(GET, "/oauth2/authorization/kakao")
+			antMatcher(GET, "/oauth2/**")
 		);
 		return requestMatchers.toArray(RequestMatcher[]::new);
 	}
