@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -40,7 +41,7 @@ public class WebSecurityConfig {
 			.httpBasic().disable()
 			.rememberMe().disable()
 			.logout().disable()
-			// .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.oauth2Login(oauth2Configurer ->
 				oauth2Configurer
 					.redirectionEndpoint(
