@@ -19,7 +19,6 @@ import com.mm.coredomain.repository.GroupRepository;
 import com.mm.coredomain.repository.MemberRepository;
 import com.mm.coreinfraredis.repository.RedisRefreshTokenRepository;
 import com.mm.coresecurity.jwt.JwtTokenProvider;
-import com.mm.coresecurity.util.HttpResponseUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -68,8 +67,10 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
 		tokenMap.put("accessToken", accessToken);
 		tokenMap.put("refreshToken", refreshToken);
 
+		log.info(">>>>>>>>>>>>>> OAUTH2 handler");
+
 		response.addHeader("Authorization", "Bearer " + accessToken);
-		HttpResponseUtil.writeSuccessResponse(response, tokenMap);
+		// HttpResponseUtil.writeSuccessResponse(response, tokenMap);
 	}
 
 	private Member getMemberElseCreateMember(String email) {
