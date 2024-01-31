@@ -1,10 +1,9 @@
 package com.mm.coreinfraqdsl.repository;
 
+import com.mm.coredomain.domain.Item;
+
 import java.util.List;
 
-import com.mm.coredomain.domain.Item;
-import com.mm.coredomain.domain.ItemCategoryType;
-
 public interface ItemCustomRepository {
-	List<Item> getItemsByPage(Integer page, ItemCategoryType categoryType);
+    List<Item> getItemsByPage(Integer page, String categoryType);
 }
