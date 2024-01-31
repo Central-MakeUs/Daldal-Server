@@ -23,14 +23,38 @@ public class ItemController {
     private final ItemService itemService;
 
     // 관리자 권한
-    @Operation(summary = "상품 글을 작성합니다.")
+    @Operation(summary = "상품 글을 작성합니다.", description = """
+            itemCategoryType = [
+                CLOTHES,
+            	BAG,
+            	SHOES,
+            	FASHION,
+            	STUFF,
+            	JEWELRY,
+            	BEAUTY,
+            	FOOD,
+            	LIFE
+            ]
+            """)
     @PostMapping("/items")
     public CommonResponse<?> createItem(@RequestBody ItemCreateRequest request) {
         ItemResponse response = itemService.createItem(request);
         return CommonResponse.ok(response);
     }
 
-    @Operation(summary = "상품 글을 업데이트합니다.")
+    @Operation(summary = "상품 글을 업데이트합니다.", description = """
+            itemCategoryType = [
+                CLOTHES,
+            	BAG,
+            	SHOES,
+            	FASHION,
+            	STUFF,
+            	JEWELRY,
+            	BEAUTY,
+            	FOOD,
+            	LIFE
+            ]
+            """)
     @PutMapping("/items/{id}")
     public CommonResponse<?> updateItem(@RequestParam Long id, @RequestBody ItemUpdateRequest request) {
         ItemResponse response = itemService.updateItem(id, request);
@@ -67,7 +91,7 @@ public class ItemController {
         return CommonResponse.ok(responses);
     }
 
-    @Operation(summary = "상품 글의 상세 내용한을 읽어옵니다.")
+    @Operation(summary = "상품 글의 상세 내용을 읽어옵니다.")
     @GetMapping("/items/{id}")
     public CommonResponse<?> getItemDetail(@RequestParam Long id,
                                            @AuthenticationPrincipal OAuth2UserDetails userDetails) {

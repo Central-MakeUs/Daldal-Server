@@ -21,6 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
+    @Operation(summary = "(실사용 X, 명세용) 로그인 url: /oauth2/authorization/{provider}", description = "provider는 kakao 혹은 apple, 현재는 kakao만 있음")
+    @GetMapping("/dummy/login")
+    public void dummy() {
+    }
+
     @Operation(summary = "로그아웃 합니다.")
     @PostMapping("/api/v1/auth/logout")
     public CommonResponse<?> logout(@RequestBody RefreshTokenRequest request) {
