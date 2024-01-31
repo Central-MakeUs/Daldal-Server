@@ -45,7 +45,20 @@ public class ItemController {
     }
 
     // 권한 X
-    @Operation(summary = "상품 글을 페이지 단위로 읽어옵니다.")
+    @Operation(summary = "상품 글을 페이지 단위로 읽어옵니다.", description = """
+            itemCategoryType = [
+                CLOTHES,
+            	BAG,
+            	SHOES,
+            	FASHION,
+            	STUFF,
+            	JEWELRY,
+            	BEAUTY,
+            	FOOD,
+            	LIFE
+            ]
+            아무것도 넣지 않으면 전체에서 읽어옵니다.
+            """)
     @GetMapping("/items")
     public CommonResponse<?> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
                                       @RequestParam(required = false) String itemCategoryType,

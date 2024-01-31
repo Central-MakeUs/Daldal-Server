@@ -35,7 +35,7 @@ public class AuthController {
         return CommonResponse.ok(response);
     }
 
-    @Operation(summary = "access token을 갱신합니다.")
+    @Operation(summary = "access token을 갱신합니다.", description = "Bearer 를 붙이지 말아주세요")
     @PostMapping("/api/v1/auth/refresh-access-token")
     public CommonResponse<?> refreshAccessToken(@RequestBody RefreshTokenRequest request) {
         TokenResponse tokenResponse = authService.refreshAccessToken(request);

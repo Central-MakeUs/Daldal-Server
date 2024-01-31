@@ -29,7 +29,7 @@ public class BuyController {
         return CommonResponse.ok(responses);
     }
 
-    @Operation(summary = "구매 인증 상태를 변경합니다.")
+    @Operation(summary = "구매 인증 상태를 변경합니다.", description = "refundStatus = [UNDER_EXAMINATION,IN_PROGRESS, COMPLETED, REJECTED]")
     @PatchMapping("/buys/{buyId}/refund-status")
     public CommonResponse<?> updateBuyRefundStatus(@PathVariable Long buyId,
                                                    @RequestParam String refundStatus) {
@@ -37,7 +37,7 @@ public class BuyController {
         return CommonResponse.ok(response);
     }
 
-    @Operation(summary = "구매 인증을 미승인 처리합니다.")
+    @Operation(summary = "구매 인증을 미승인 처리합니다.", description = "미승인 사유를 입력해주세요.")
     @PatchMapping("/buys/{buyId}/reject")
     public CommonResponse<?> rejectBuyRefundStatus(@PathVariable Long buyId,
                                                    @RequestBody RejectBuyRefundStatusRequest request) {
@@ -54,7 +54,7 @@ public class BuyController {
     }
 
     // 회원만
-    @Operation(summary = "구매 인증을 작성합니다.")
+    @Operation(summary = "구매 인증을 작성합니다.", description = "form으로 input type을 file로 지정해서 이미지를 첨부합니다.")
     @PostMapping("/buys/{memberId}/{itemId}")
     public CommonResponse<?> postBuy(@PathVariable Long memberId, @PathVariable Long itemId,
                                      @RequestPart(value = "file", required = true) MultipartFile file) {

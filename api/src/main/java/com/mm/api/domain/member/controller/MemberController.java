@@ -18,7 +18,11 @@ public class MemberController {
 
     // 관리자 권한 + 자신만
 
-    @Operation(summary = "사용자 계좌 정보를 업데이트합니다.")
+    @Operation(summary = "사용자 계좌 정보를 업데이트합니다.", description = """
+            depositorName - 입금자명  
+            account - 계좌번호  
+            accountBank - 은행
+            """)
     @PatchMapping("/members/{memberId}/account")
     public CommonResponse<?> updateMemberAccount(@PathVariable Long memberId,
                                                  @RequestBody UpdateMemberAccountRequest request) {
