@@ -9,6 +9,3 @@ server:
 sentry:
   dsn: https://999e44a6495910742e8b4648b6335a77@o4506546396332032.ingest.sentry.io/4506558091689984
   tracesSampleRate: 1.0
-logging:
-  level:
-    root: trace
