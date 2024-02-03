@@ -26,7 +26,8 @@ public class Member extends BaseEntity {
 
 	private String email;
 
-	private Integer point;
+	@Builder.Default
+	private Integer point = 0;
 
 	private String depositorName;
 
