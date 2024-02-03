@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.mm.coresecurity.jwt.JwtAccessDeniedHandler;
 import com.mm.coresecurity.jwt.JwtAuthenticationEntryPoint;
@@ -35,6 +36,14 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
+			.cors().configurationSource(request -> {
+				CorsConfiguration cors = new CorsConfiguration();
+				cors.setAllowedOrigins(List.of("*"));
+				cors.setAllowedMethods(List.of("HEAD", "POST", "GET", "DELETE", "PUT", "OPTIONS"));
+				cors.setAllowedHeaders(List.of("*"));
+				cors.setAllowCredentials(true);
+				return cors;
+			}).and()
 			.csrf().disable()
 			.anonymous().disable()
 			.formLogin().disable()

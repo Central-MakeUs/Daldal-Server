@@ -13,7 +13,8 @@ public enum ErrorCode {
 	MEMBER_NOT_FOUND("404/0002", HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다"),
 	BUY_NOT_FOUND("404/0003", HttpStatus.NOT_FOUND, "존재하지 않는 구매인증입니다"),
 	DIB_NOT_FOUND("404/0004", HttpStatus.NOT_FOUND, "존재하지 않는 찜하기입니다"),
-	REFRESH_TOKEN_EXPIRED("401/0001", HttpStatus.UNAUTHORIZED, "토큰이 만료되었으니 다시 로그인 해주세요");
+	REFRESH_TOKEN_EXPIRED("401/0001", HttpStatus.UNAUTHORIZED, "리퀘스트 토큰이 만료되었으니 다시 로그인 해주세요"),
+	ACCESS_TOKEN_EXPIRED("401/0002", HttpStatus.UNAUTHORIZED, "어세스 토큰이 만료되었으니 재발급 해주세요");
 
 	private final String errorCode;
 	private final HttpStatus status;
