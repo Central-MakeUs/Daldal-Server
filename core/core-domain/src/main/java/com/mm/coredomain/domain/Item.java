@@ -1,10 +1,23 @@
 package com.mm.coredomain.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
+import java.util.List;
+
 import org.hibernate.annotations.SQLDelete;
 
-import java.util.List;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
@@ -13,49 +26,52 @@ import java.util.List;
 @AllArgsConstructor
 @SQLDelete(sql = "UPDATE item SET deleted = true WHERE id = ?")
 public class Item extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Lob
-    private String detail;
+	private String title;
 
-    @Lob
-    private String redirectUrl;
+	@Lob
+	private String detail;
 
-    @Enumerated(value = EnumType.STRING)
-    private ItemCategoryType categoryType;
+	@Lob
+	private String redirectUrl;
 
-    private Integer price;
+	@Enumerated(value = EnumType.STRING)
+	private ItemCategoryType categoryType;
 
-    private Integer refund;
+	private Integer price;
 
-    private Double rating;
+	private Integer refund;
 
-    @Lob
-    private String thumbnailUrl;
+	private Double rating;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemImage> itemImages;
+	@Lob
+	private String thumbnailUrl;
 
-    @OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemVideo> itemVideos;
+	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ItemImage> itemImages;
 
-    public void setItemImages(List<ItemImage> itemImages) {
-        this.itemImages = itemImages;
-    }
+	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<ItemVideo> itemVideos;
 
-    public void setItemVideos(List<ItemVideo> itemVideos) {
-        this.itemVideos = itemVideos;
-    }
+	public void setItemImages(List<ItemImage> itemImages) {
+		this.itemImages = itemImages;
+	}
 
-    public void updateItem(ItemUpdate itemUpdate) {
-        this.detail = itemUpdate.detail();
-        this.redirectUrl = itemUpdate.redirectUrl();
-        this.categoryType = itemUpdate.categoryType();
-        this.price = itemUpdate.price();
-        this.refund = itemUpdate.refund();
-        this.rating = itemUpdate.rating();
-        this.thumbnailUrl = itemUpdate.thumbnailUrl();
-    }
+	public void setItemVideos(List<ItemVideo> itemVideos) {
+		this.itemVideos = itemVideos;
+	}
+
+	public void updateItem(ItemUpdate itemUpdate) {
+		this.title = itemUpdate.title();
+		this.detail = itemUpdate.detail();
+		this.redirectUrl = itemUpdate.redirectUrl();
+		this.categoryType = itemUpdate.categoryType();
+		this.price = itemUpdate.price();
+		this.refund = itemUpdate.refund();
+		this.rating = itemUpdate.rating();
+		this.thumbnailUrl = itemUpdate.thumbnailUrl();
+	}
 }
