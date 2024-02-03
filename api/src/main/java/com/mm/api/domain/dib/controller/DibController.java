@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
-import com.mm.api.common.swaggerAnnotation.SwaggerErrorsDib;
+import com.mm.api.common.swaggerAnnotation.SwaggerResponseDib;
 import com.mm.api.domain.dib.service.DibService;
 import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -22,7 +22,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "찜하기", description = "찜하기 관련 API 입니다.")
-@SwaggerErrorsDib
+@SwaggerResponseDib
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -48,7 +48,8 @@ public class DibController {
 
 	@Operation(summary = "내 찜하기 목록을 페이지 단위로 가져옵니다.")
 	@GetMapping("/dib/me")
-	public CommonResponse<?> getDibsMe(@RequestParam(required = false, defaultValue = "1") Integer page,
+	public CommonResponse<List<ItemResponse>> getDibsMe(
+		@RequestParam(required = false, defaultValue = "1") Integer page,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		List<ItemResponse> responses = dibService.getDibsMe(page, userDetails);
 		return CommonResponse.ok(responses);

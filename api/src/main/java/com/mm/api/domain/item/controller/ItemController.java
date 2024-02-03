@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
-import com.mm.api.common.swaggerAnnotation.SwaggerErrorsItem;
+import com.mm.api.common.swaggerAnnotation.SwaggerResponseItem;
 import com.mm.api.domain.item.dto.request.ItemCreateRequest;
 import com.mm.api.domain.item.dto.request.ItemUpdateRequest;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
@@ -26,7 +26,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "상품", description = "상품 관련 API 입니다.")
-@SwaggerErrorsItem
+@SwaggerResponseItem
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -48,7 +48,7 @@ public class ItemController {
 		]
 		""")
 	@PostMapping("/items")
-	public CommonResponse<?> createItem(@RequestBody ItemCreateRequest request) {
+	public CommonResponse<ItemResponse> createItem(@RequestBody ItemCreateRequest request) {
 		ItemResponse response = itemService.createItem(request);
 		return CommonResponse.ok(response);
 	}
@@ -67,7 +67,7 @@ public class ItemController {
 		]
 		""")
 	@PutMapping("/items/{id}")
-	public CommonResponse<?> updateItem(@RequestParam Long id, @RequestBody ItemUpdateRequest request) {
+	public CommonResponse<ItemResponse> updateItem(@RequestParam Long id, @RequestBody ItemUpdateRequest request) {
 		ItemResponse response = itemService.updateItem(id, request);
 		return CommonResponse.ok(response);
 	}
@@ -95,7 +95,7 @@ public class ItemController {
 		아무것도 넣지 않으면 전체에서 읽어옵니다.
 		""")
 	@GetMapping("/items")
-	public CommonResponse<?> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
+	public CommonResponse<List<ItemResponse>> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
 		@RequestParam(required = false) String itemCategoryType,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		List<ItemResponse> responses = itemService.getItems(page, userDetails, itemCategoryType);
@@ -104,7 +104,7 @@ public class ItemController {
 
 	@Operation(summary = "상품 글의 상세 내용을 읽어옵니다.")
 	@GetMapping("/items/{id}")
-	public CommonResponse<?> getItemDetail(@RequestParam Long id,
+	public CommonResponse<ItemDetailResponse> getItemDetail(@RequestParam Long id,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		ItemDetailResponse response = itemService.getItemDetail(id, userDetails);
 		return CommonResponse.ok(response);

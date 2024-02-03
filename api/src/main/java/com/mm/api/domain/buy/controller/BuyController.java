@@ -2,6 +2,7 @@ package com.mm.api.domain.buy.controller;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mm.api.common.response.CommonResponse;
-import com.mm.api.common.swaggerAnnotation.SwaggerErrorsBuy;
+import com.mm.api.common.swaggerAnnotation.SwaggerResponseBuy;
 import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
@@ -27,7 +28,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "구매 인증", description = "구매 인증 관련 API 입니다.")
-@SwaggerErrorsBuy
+@SwaggerResponseBuy
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -37,14 +38,14 @@ public class BuyController {
 	// 관리자만
 	@Operation(summary = "전체 구매 인증을 페이지 단위로 가져옵니다.")
 	@GetMapping("/buys")
-	public CommonResponse<?> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
+	public CommonResponse<List<BuyResponse>> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
 		List<BuyResponse> responses = buyService.getBuys(page);
 		return CommonResponse.ok(responses);
 	}
 
 	@Operation(summary = "구매 인증 상태를 변경합니다.", description = "refundStatus = [UNDER_EXAMINATION,IN_PROGRESS, COMPLETED, REJECTED]")
 	@PatchMapping("/buys/{buyId}/refund-status")
-	public CommonResponse<?> updateBuyRefundStatus(@PathVariable Long buyId,
+	public CommonResponse<BuyResponse> updateBuyRefundStatus(@PathVariable Long buyId,
 		@RequestParam String refundStatus) {
 		BuyResponse response = buyService.updateBuyRefundStatus(buyId, refundStatus);
 		return CommonResponse.ok(response);
@@ -52,7 +53,7 @@ public class BuyController {
 
 	@Operation(summary = "구매 인증을 미승인 처리합니다.", description = "미승인 사유를 입력해주세요.")
 	@PatchMapping("/buys/{buyId}/reject")
-	public CommonResponse<?> rejectBuyRefundStatus(@PathVariable Long buyId,
+	public CommonResponse<BuyResponse> rejectBuyRefundStatus(@PathVariable Long buyId,
 		@RequestBody RejectBuyRefundStatusRequest request) {
 		BuyResponse response = buyService.rejectBuyRefundStatus(buyId, request);
 		return CommonResponse.ok(response);
@@ -68,8 +69,8 @@ public class BuyController {
 
 	// 회원만
 	@Operation(summary = "구매 인증을 작성합니다.", description = "form으로 input type을 file로 지정해서 이미지를 첨부합니다.")
-	@PostMapping("/buys/{memberId}/{itemId}")
-	public CommonResponse<?> postBuy(@PathVariable Long memberId, @PathVariable Long itemId,
+	@PostMapping(value = "/buys/{memberId}/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public CommonResponse<BuyResponse> postBuy(@PathVariable Long memberId, @PathVariable Long itemId,
 		@RequestPart(value = "file", required = true) MultipartFile file) {
 		BuyResponse buyResponse = buyService.postBuy(memberId, itemId, file);
 		return CommonResponse.ok(buyResponse);
@@ -77,7 +78,7 @@ public class BuyController {
 
 	@Operation(summary = "내 구매 인증을 전부 가져옵니다.")
 	@GetMapping("/buys/me")
-	public CommonResponse<?> getBuysMe(@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+	public CommonResponse<List<BuyResponse>> getBuysMe(@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		List<BuyResponse> responses = buyService.getBuysMe(userDetails);
 		return CommonResponse.ok(responses);
 	}

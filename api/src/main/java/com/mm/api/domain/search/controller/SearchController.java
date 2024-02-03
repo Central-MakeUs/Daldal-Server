@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
+import com.mm.api.common.swaggerAnnotation.SwaggerResponseSearch;
 import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.api.domain.search.service.SearchService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "검색", description = "검색 관련 API 입니다.")
+@SwaggerResponseSearch
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor

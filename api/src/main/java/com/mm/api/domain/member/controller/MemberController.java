@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
-import com.mm.api.common.swaggerAnnotation.SwaggerErrorsMember;
+import com.mm.api.common.swaggerAnnotation.SwaggerResponseMember;
 import com.mm.api.domain.member.dto.request.UpdateMemberAccountRequest;
 import com.mm.api.domain.member.dto.response.MemberInfoResponse;
 import com.mm.api.domain.member.service.MemberService;
@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "회원", description = "회원 관련 API 입니다.")
-@SwaggerErrorsMember
+@SwaggerResponseMember
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -50,7 +50,7 @@ public class MemberController {
 
 	@Operation(summary = "특정 사용자의 정보를 가져옵니다.")
 	@GetMapping("/members/{memberId}")
-	public CommonResponse<?> getMemberInfo(@PathVariable Long memberId) {
+	public CommonResponse<MemberInfoResponse> getMemberInfo(@PathVariable Long memberId) {
 		MemberInfoResponse memberInfo = memberService.getMemberInfo(memberId);
 		return CommonResponse.ok(memberInfo);
 	}
