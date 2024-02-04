@@ -38,7 +38,7 @@ public class WebSecurityConfig {
 		return http
 			.cors().configurationSource(request -> {
 				CorsConfiguration cors = new CorsConfiguration();
-				cors.setAllowedOrigins(List.of("*"));
+				cors.setAllowedOriginPatterns(List.of("*"));
 				cors.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
 				cors.setAllowedHeaders(List.of("*"));
 				cors.setAllowCredentials(true);
