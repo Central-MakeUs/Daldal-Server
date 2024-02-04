@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 	@ApiResponse(responseCode = "404/0004", description = "존재하지 않는 찜하기입니다.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
 	@ApiResponse(responseCode = "401/0001", description = "리퀘스트 토큰이 만료되었으니 다시 로그인 해주세요.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
 	@ApiResponse(responseCode = "401/0002", description = "어세스 토큰이 만료되었으니 재발급 해주세요.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-	@ApiResponse(responseCode = "500", description = "서버 에러 발생"),
+	@ApiResponse(responseCode = "500", description = "서버 에러 발생", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
 })
 public @interface SwaggerResponseDib {
 }
