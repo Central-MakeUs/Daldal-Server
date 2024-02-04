@@ -8,6 +8,7 @@ jar { enabled = false }
 dependencies {
     implementation project(':core:core-domain');
     implementation project(':core:core-infra-rdb');
+    implementation project(':core:core-infra-feign');
     implementation project(':core:core-infra-qdsl');
     implementation project(':core:core-infra-redis');
     implementation project(':core:core-infra-s3');

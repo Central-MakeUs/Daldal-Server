@@ -7,7 +7,6 @@ import com.mm.coredomain.domain.ItemCategoryType;
 
 public record ItemDetailResponse(Long id,
 								 String title,
-								 String detail,
 								 String redirectUrl,
 								 ItemCategoryType categoryType,
 								 Integer price,
@@ -21,7 +20,6 @@ public record ItemDetailResponse(Long id,
 		return new ItemDetailResponse(
 			item.getId(),
 			item.getTitle(),
-			item.getDetail(),
 			item.getRedirectUrl(),
 			item.getCategoryType(),
 			item.getPrice(),

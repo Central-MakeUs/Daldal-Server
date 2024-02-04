@@ -5,7 +5,7 @@ import java.util.List;
 import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemCategoryType;
 
-public record ItemCreateRequest(String detail,
+public record ItemCreateRequest(String title,
 								String redirectUrl,
 								String categoryType,
 								Integer price,
@@ -17,7 +17,7 @@ public record ItemCreateRequest(String detail,
 ) {
 	public Item toEntity() {
 		return Item.builder()
-			.detail(detail)
+			.title(title)
 			.redirectUrl(redirectUrl)
 			.categoryType(ItemCategoryType.of(categoryType))
 			.price(price)
