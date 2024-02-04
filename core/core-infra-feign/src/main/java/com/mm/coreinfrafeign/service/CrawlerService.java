@@ -48,6 +48,6 @@ public class CrawlerService {
 	}
 
 	private Integer getRefundPrice(Integer price, Integer percent) {
-		return price * (100 - percent) / 100;
+		return price * percent / 100;
 	}
 }
