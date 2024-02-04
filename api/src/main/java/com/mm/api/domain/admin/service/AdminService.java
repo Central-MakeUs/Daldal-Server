@@ -18,22 +18,28 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class AdminService {
-	private ItemRepository itemRepository;
-
-	private CrawlerService crawlerService;
+	private final ItemRepository itemRepository;
+	private final CrawlerService crawlerService;
 
 	public ItemDetailResponse crawlItem(String url) {
-		Item savedItem = itemRepository.save(crawlerService.getZigZagItemByCrawler(url));
+		Item item = crawlerService.getZigZagItemByCrawler(url);
+		Item savedItem = itemRepository.save(item);
 		return getItemDetailResponseByItem(savedItem);
 	}
 
 	private ItemDetailResponse getItemDetailResponseByItem(Item savedItem) {
-		List<String> images = savedItem.getItemImages().stream()
-			.map(ItemImage::getUrl)
-			.toList();
-		List<String> videos = savedItem.getItemVideos().stream()
-			.map(ItemVideo::getUrl)
-			.toList();
+		List<String> images = null;
+		if (savedItem.getItemImages() != null) {
+			images = savedItem.getItemImages().stream()
+				.map(ItemImage::getUrl)
+				.toList();
+		}
+		List<String> videos = null;
+		if (savedItem.getItemVideos() != null) {
+			videos = savedItem.getItemVideos().stream()
+				.map(ItemVideo::getUrl)
+				.toList();
+		}
 		return ItemDetailResponse.of(savedItem, images, videos, false);
 	}
 }

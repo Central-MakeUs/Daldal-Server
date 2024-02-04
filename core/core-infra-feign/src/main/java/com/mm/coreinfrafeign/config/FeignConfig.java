@@ -1,9 +1,11 @@
 package com.mm.coreinfrafeign.config;
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableFeignClients("com.mm.coreinfrafeign")
+@ComponentScan(basePackages = "com.mm")
+@EnableFeignClients(basePackages = "com.mm")
 public class FeignConfig {
 }
