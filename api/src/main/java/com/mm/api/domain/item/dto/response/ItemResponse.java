@@ -4,7 +4,7 @@ import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemCategoryType;
 
 public record ItemResponse(Long id,
-						   String detail,
+						   String title,
 						   String redirectUrl,
 						   ItemCategoryType categoryType,
 						   Integer price,
@@ -15,7 +15,7 @@ public record ItemResponse(Long id,
 	public static ItemResponse of(Item item, Boolean isDib) {
 		return new ItemResponse(
 			item.getId(),
-			item.getDetail(),
+			item.getTitle(),
 			item.getRedirectUrl(),
 			item.getCategoryType(),
 			item.getPrice(),

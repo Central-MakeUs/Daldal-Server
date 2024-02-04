@@ -5,9 +5,21 @@ bootJar { enabled = true }
 // 외부에서 의존하기 위한 jar로 생성하는 옵션, main이 없는 라이브러리에서는 true로 비활성화함
 jar { enabled = false }
 
+ext {
+    set('springCloudVersion', "2022.0.5")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+
 dependencies {
     implementation project(':core:core-domain');
     implementation project(':core:core-infra-rdb');
+    implementation project(':core:core-infra-feign');
     implementation project(':core:core-infra-qdsl');
     implementation project(':core:core-infra-redis');
     implementation project(':core:core-infra-s3');
@@ -37,4 +49,7 @@ dependencies {
 
     // sentry
     implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.1.0'
+
+    // feign
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }

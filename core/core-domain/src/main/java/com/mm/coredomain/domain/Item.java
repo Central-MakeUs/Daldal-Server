@@ -33,9 +33,6 @@ public class Item extends BaseEntity {
 	private String title;
 
 	@Lob
-	private String detail;
-
-	@Lob
 	private String redirectUrl;
 
 	@Enumerated(value = EnumType.STRING)
@@ -66,7 +63,6 @@ public class Item extends BaseEntity {
 
 	public void updateItem(ItemUpdate itemUpdate) {
 		this.title = itemUpdate.title();
-		this.detail = itemUpdate.detail();
 		this.redirectUrl = itemUpdate.redirectUrl();
 		this.categoryType = itemUpdate.categoryType();
 		this.price = itemUpdate.price();
