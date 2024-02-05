@@ -1,4 +1,4 @@
-package com.mm.coreinfrafeign.config;
+package com.mm.coreinfrafeign.crawler.config;
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;

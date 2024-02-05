@@ -1,4 +1,4 @@
-package com.mm.coreinfrafeign.service;
+package com.mm.coreinfrafeign.crawler.service;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemCategoryType;
 import com.mm.coredomain.domain.ItemImage;
-import com.mm.coreinfrafeign.client.ZigZagCrawlerClient;
-import com.mm.coreinfrafeign.dto.requset.ZigZagCrawlerRequest;
-import com.mm.coreinfrafeign.dto.response.ZigZagCrawlerResponse;
+import com.mm.coreinfrafeign.crawler.client.ZigZagCrawlerClient;
+import com.mm.coreinfrafeign.crawler.dto.requset.ZigZagCrawlerRequest;
+import com.mm.coreinfrafeign.crawler.dto.response.ZigZagCrawlerResponse;
 
 import lombok.RequiredArgsConstructor;
 

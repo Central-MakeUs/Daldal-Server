@@ -10,7 +10,7 @@ import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemImage;
 import com.mm.coredomain.domain.ItemVideo;
 import com.mm.coredomain.repository.ItemRepository;
-import com.mm.coreinfrafeign.service.CrawlerService;
+import com.mm.coreinfrafeign.crawler.service.CrawlerService;
 
 import lombok.RequiredArgsConstructor;
 

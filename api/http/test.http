@@ -8,7 +8,7 @@ Content-Type: application/json
 
 ### 로그인 사용자 정보 가져오기
 GET http://localhost:8080/api/v1/auth/me
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6MSwiaWF0IjoxNzA2Mjg2NDczLCJleHAiOjE3MDYyODgyNzMsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0.Lz-kxUT-JtOJ6cLA3OtF-j8_5aL-ChECmbb6IXH0OtMDSxWlIPKHP5BBuFC9l-xPdY59xlfw-HMQjt2I-vm72A
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJpZCI6MSwiaWF0IjoxNzA3MTYwMzUxLCJleHAiOjE3MDcxNjIxNTEsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0.fWphCix58c1JH30HW-E-trpKpJms9mzfioIZMb5g-psJnfC9flPEgGRvZAN7rCPho0WVwAI47vDgBebqBSBpyg
 
 ### 로그아웃
 POST http://localhost:8080/api/v1/auth/logout
@@ -23,3 +23,12 @@ GET http://localhost:8080/api/v1/items
 
 ### 어드민 크롤링 기능
 POST http://localhost:8080/api/v1/admin/items/crawl?url=https://s.zigzag.kr/f2KRWpFiXx
+
+### 카카오 로그인
+GET http://localhost:8080/api/v1/auth/login/kakao
+Content-Type: application/json
+
+{
+  "redirectUri": "http://localhost:5173",
+  "code": "w96QVkTdcA-Vm46eot4CyVncALf9MAyUv8nxLftC60k2VLm9JXVw5f3pxeMKKiWPAAABjXqvbDgicpf3YNJZ6g"
+}

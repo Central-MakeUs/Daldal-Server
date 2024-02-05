@@ -1,12 +1,12 @@
-package com.mm.coreinfrafeign.client;
+package com.mm.coreinfrafeign.crawler.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.mm.coreinfrafeign.dto.requset.ZigZagCrawlerRequest;
-import com.mm.coreinfrafeign.dto.response.ZigZagCrawlerResponse;
+import com.mm.coreinfrafeign.crawler.dto.requset.ZigZagCrawlerRequest;
+import com.mm.coreinfrafeign.crawler.dto.response.ZigZagCrawlerResponse;
 
 @Component
 @FeignClient(name = "ZigZagCrawler", url = "https://87vlx0pzf0.execute-api.ap-northeast-2.amazonaws.com/crawler/zigzag")
