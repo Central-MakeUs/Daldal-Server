@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseAuth;
+import com.mm.api.domain.auth.dto.request.LoginKakaoRequest;
 import com.mm.api.domain.auth.dto.request.RefreshTokenRequest;
 import com.mm.api.domain.auth.dto.response.TokenResponse;
 import com.mm.api.domain.auth.service.AuthService;
@@ -25,9 +26,11 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final AuthService authService;
 
-	@Operation(summary = "(실사용 X, 명세용) 로그인 url: /oauth2/authorization/{provider}", description = "/oauth2/authorization/{provider} , provider는 kakao 혹은 apple, 현재는 kakao만 있음")
-	@GetMapping("/dummy/login")
-	public void dummy() {
+	@Operation(summary = "카카오 소셜 로그인을 합니다.")
+	@GetMapping("/api/v1/auth/login/kakao")
+	public CommonResponse<TokenResponse> loginKakao(@RequestBody LoginKakaoRequest request) {
+		TokenResponse response = authService.loginKakao(request);
+		return CommonResponse.ok(response);
 	}
 
 	@Operation(summary = "로그아웃 합니다.")

@@ -25,4 +25,15 @@ public class BuyCustomRepositoryImpl implements BuyCustomRepository {
 			.limit(PAGE_OFFSET)
 			.fetch();
 	}
+
+	@Override
+	public Long getPageNum() {
+		Long count = jpaQueryFactory.select(buy.count())
+			.from(buy)
+			.fetchOne();
+		if (count % PAGE_OFFSET != 0) {
+			return count / PAGE_OFFSET + 1;
+		}
+		return count / PAGE_OFFSET;
+	}
 }

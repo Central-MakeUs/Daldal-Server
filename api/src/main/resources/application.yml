@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: infra-rdb, redis, s3, security
+    include: infra-rdb, redis, s3, security, feign
     active: prod
 
 server:

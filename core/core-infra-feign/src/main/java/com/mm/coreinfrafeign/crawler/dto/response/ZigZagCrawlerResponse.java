@@ -1,4 +1,4 @@
-package com.mm.coreinfrafeign.dto.response;
+package com.mm.coreinfrafeign.crawler.dto.response;
 
 import java.util.List;
 

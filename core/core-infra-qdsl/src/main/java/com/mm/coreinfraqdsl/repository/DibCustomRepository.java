@@ -7,4 +7,6 @@ import com.mm.coredomain.domain.Member;
 
 public interface DibCustomRepository {
 	List<Dib> getDibsByPage(Integer page, Member member);
+
+	Long getPageNum(Member member);
 }

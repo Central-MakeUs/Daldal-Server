@@ -12,6 +12,7 @@ import com.mm.api.domain.dib.service.DibService;
 import com.mm.api.domain.item.dto.request.ItemCreateRequest;
 import com.mm.api.domain.item.dto.request.ItemUpdateRequest;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
+import com.mm.api.domain.item.dto.response.ItemListResponse;
 import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.coredomain.domain.Item;
@@ -47,15 +48,20 @@ public class ItemService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ItemResponse> getItems(Integer page, OAuth2UserDetails userDetails, String itemCategoryType) {
+	public ItemListResponse getItems(Integer page, OAuth2UserDetails userDetails, String itemCategoryType) {
 		List<Item> items = itemCustomRepository.getItemsByPage(page, itemCategoryType);
 
 		List<Boolean> dibs = dibService.getDib(items, userDetails);
 
-		return IntStream.range(0, items.size())
+		List<ItemResponse> itemResponses = IntStream.range(0, items.size())
 			.mapToObj(i ->
 				ItemResponse.of(items.get(i), dibs.get(i)))
 			.toList();
+
+		Long pageNum = itemCustomRepository.getPageNum(itemCategoryType);
+		Boolean isLastPage = pageNum.equals(page.longValue());
+
+		return new ItemListResponse(isLastPage, itemResponses);
 	}
 
 	@Transactional(readOnly = true)

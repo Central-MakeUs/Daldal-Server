@@ -1,4 +1,4 @@
-package com.mm.coreinfrafeign.service;
+package com.mm.coreinfrafeign.crawler.service;
 
 import java.util.List;
 
@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mm.coredomain.domain.Item;
 import com.mm.coredomain.domain.ItemCategoryType;
 import com.mm.coredomain.domain.ItemImage;
-import com.mm.coreinfrafeign.client.ZigZagCrawlerClient;
-import com.mm.coreinfrafeign.dto.requset.ZigZagCrawlerRequest;
-import com.mm.coreinfrafeign.dto.response.ZigZagCrawlerResponse;
+import com.mm.coreinfrafeign.crawler.client.ZigZagCrawlerClient;
+import com.mm.coreinfrafeign.crawler.dto.requset.ZigZagCrawlerRequest;
+import com.mm.coreinfrafeign.crawler.dto.response.ZigZagCrawlerResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,24 +23,27 @@ public class CrawlerService {
 	public Item getZigZagItemByCrawler(String redirectUrl) {
 		ZigZagCrawlerResponse response = zigZagCrawlerClient.call(new ZigZagCrawlerRequest(redirectUrl));
 
-		List<ItemImage> itemImages = response.productImageList()
-			.stream()
-			.map(image -> ItemImage.builder()
-				.url(image.url())
-				.build())
-			.toList();
-
 		ItemCategoryType categoryType = getCategoryType(response);
 
-		return Item.builder()
+		Item item = Item.builder()
 			.price(response.finalPrice())
 			.title(response.name())
 			.redirectUrl(response.pageUrl())
 			.categoryType(categoryType)
-			.itemImages(itemImages)
 			.refund(getRefundPrice(response.finalPrice(), categoryType.getRefundPercent()))
 			.thumbnailUrl(response.thumbnailUrl())
 			.build();
+
+		List<ItemImage> itemImages = response.productImageList()
+			.stream()
+			.map(image -> ItemImage.builder()
+				.item(item)
+				.url(image.url())
+				.build())
+			.toList();
+
+		item.setItemImages(itemImages);
+		return item;
 	}
 
 	private static ItemCategoryType getCategoryType(ZigZagCrawlerResponse response) {
@@ -48,6 +51,6 @@ public class CrawlerService {
 	}
 
 	private Integer getRefundPrice(Integer price, Integer percent) {
-		return price * (100 - percent) / 100;
+		return price * percent / 100;
 	}
 }

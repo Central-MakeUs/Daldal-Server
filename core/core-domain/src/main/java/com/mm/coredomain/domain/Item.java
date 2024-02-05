@@ -1,5 +1,6 @@
 package com.mm.coredomain.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.SQLDelete;
@@ -47,18 +48,22 @@ public class Item extends BaseEntity {
 	@Lob
 	private String thumbnailUrl;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ItemImage> itemImages;
+	private List<ItemImage> itemImages = new ArrayList<ItemImage>();
 
+	@Builder.Default
 	@OneToMany(mappedBy = "item", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<ItemVideo> itemVideos;
+	private List<ItemVideo> itemVideos = new ArrayList<ItemVideo>();
 
 	public void setItemImages(List<ItemImage> itemImages) {
-		this.itemImages = itemImages;
+		this.itemImages.clear();
+		itemImages.forEach(itemImage -> this.itemImages.add(itemImage));
 	}
 
 	public void setItemVideos(List<ItemVideo> itemVideos) {
-		this.itemVideos = itemVideos;
+		this.itemVideos.clear();
+		itemVideos.forEach(itemVideo -> this.itemVideos.add(itemVideo));
 	}
 
 	public void updateItem(ItemUpdate itemUpdate) {
