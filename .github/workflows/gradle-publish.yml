@@ -20,12 +20,14 @@ jobs:
         mkdir -p core/core-infra-rdb/src/main/resources
         mkdir -p core/core-security/src/main/resources
         mkdir -p core/core-infra-s3/src/main/resources
+        mkdir -p core/core-infra-feign/src/main/resources
         
     - name: Create application-properties.yml
       run: |
         echo "${{ secrets.APPLICATION_INFRA_RDB }}" > core/core-infra-rdb/src/main/resources/application-infra-rdb.yml
         echo "${{ secrets.APPLICATION_SECURITY }}" > core/core-security/src/main/resources/application-security.yml
         echo "${{ secrets.APPLICATION_AWS_CLOUD }}" > core/core-infra-s3/src/main/resources/application-s3.yml
+        echo "${{ secrets.APPLICATION_FEIGN }}" > core/core-infra-feign/src/main/resources/application-feign.yml
     
     - name: Set up JDK 17
       uses: actions/setup-java@v3
