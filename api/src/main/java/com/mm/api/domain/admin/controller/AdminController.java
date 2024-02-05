@@ -9,6 +9,7 @@ import com.mm.api.common.response.CommonResponse;
 import com.mm.api.domain.admin.service.AdminService;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -16,7 +17,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminController {
 	private final AdminService adminService;
-
+	
+	@Operation(summary = "url을 입력해 크롤링합니다.", description = "zigzag url만 가능, ex) https://s.zigzag.kr/dV7jnGouAl?af=1")
 	@PostMapping("/items/crawl")
 	public CommonResponse<ItemDetailResponse> crawlItem(@RequestParam String url) {
 		ItemDetailResponse response = adminService.crawlItem(url);

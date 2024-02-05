@@ -9,7 +9,6 @@ public record ItemResponse(Long id,
 						   ItemCategoryType categoryType,
 						   Integer price,
 						   Integer refund,
-						   Double rating,
 						   String thumbnailUrl,
 						   Boolean isDib) {
 	public static ItemResponse of(Item item, Boolean isDib) {
@@ -20,7 +19,6 @@ public record ItemResponse(Long id,
 			item.getCategoryType(),
 			item.getPrice(),
 			item.getRefund(),
-			item.getRating(),
 			item.getThumbnailUrl(),
 			isDib
 		);
