@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseBuy;
 import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
+import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -38,8 +39,8 @@ public class BuyController {
 	// 관리자만
 	@Operation(summary = "전체 구매 인증을 페이지 단위로 가져옵니다.")
 	@GetMapping("/buys")
-	public CommonResponse<List<BuyResponse>> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
-		List<BuyResponse> responses = buyService.getBuys(page);
+	public CommonResponse<BuyListResponse> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		BuyListResponse responses = buyService.getBuys(page);
 		return CommonResponse.ok(responses);
 	}
 

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mm.api.domain.dib.dto.response.DibListResponse;
 import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -70,13 +71,18 @@ public class DibService {
 		dibRepository.delete(dib);
 	}
 
-	public List<ItemResponse> getDibsMe(Integer page, OAuth2UserDetails userDetails) {
+	public DibListResponse getDibsMe(Integer page, OAuth2UserDetails userDetails) {
 		Member member = getMember(userDetails.getId());
 		List<Dib> dibs = dibCustomRepository.getDibsByPage(page, member);
-		return dibs.stream()
+		List<ItemResponse> itemResponses = dibs.stream()
 			.map(dib ->
 				ItemResponse.of(dib.getItem(), true))
 			.toList();
+
+		Long pageNum = dibCustomRepository.getPageNum(member);
+		Boolean isLastPage = pageNum.equals(page.longValue());
+
+		return new DibListResponse(isLastPage, itemResponses);
 	}
 
 	private boolean isDibExist(Member member, Item item) {

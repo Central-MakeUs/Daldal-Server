@@ -39,4 +39,18 @@ public class SearchCustomRepositoryImpl implements SearchCustomRepository {
 
 		return booleanBuilder;
 	}
+
+	@Override
+	public Long getPageNum(String keyword) {
+		Long count = jpaQueryFactory.select(item.count())
+			.from(item)
+			.where(
+				containsKeyword(keyword)
+			)
+			.fetchOne();
+		if (count % PAGE_OFFSET != 0) {
+			return count / PAGE_OFFSET + 1;
+		}
+		return count / PAGE_OFFSET;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import com.mm.api.common.swaggerAnnotation.SwaggerResponseItem;
 import com.mm.api.domain.item.dto.request.ItemCreateRequest;
 import com.mm.api.domain.item.dto.request.ItemUpdateRequest;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
+import com.mm.api.domain.item.dto.response.ItemListResponse;
 import com.mm.api.domain.item.dto.response.ItemResponse;
 import com.mm.api.domain.item.service.ItemService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -98,13 +100,13 @@ public class ItemController {
 	public CommonResponse<List<ItemResponse>> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
 		@RequestParam(required = false) String itemCategoryType,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		List<ItemResponse> responses = itemService.getItems(page, userDetails, itemCategoryType);
+		ItemListResponse responses = itemService.getItems(page, userDetails, itemCategoryType);
 		return CommonResponse.ok(responses);
 	}
 
 	@Operation(summary = "상품 글의 상세 내용을 읽어옵니다.")
 	@GetMapping("/items/{id}")
-	public CommonResponse<ItemDetailResponse> getItemDetail(@RequestParam Long id,
+	public CommonResponse<ItemDetailResponse> getItemDetail(@PathVariable Long id,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		ItemDetailResponse response = itemService.getItemDetail(id, userDetails);
 		return CommonResponse.ok(response);

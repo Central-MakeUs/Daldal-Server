@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
+import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -69,11 +70,14 @@ public class BuyService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<BuyResponse> getBuys(Integer page) {
+	public BuyListResponse getBuys(Integer page) {
 		List<Buy> buys = buyCustomRepository.getBuysByPage(page);
-		return buys.stream()
+		List<BuyResponse> buyResponses = buys.stream()
 			.map(BuyResponse::of)
 			.toList();
+
+		Long pageNum = buyCustomRepository.getPageNum();
+		return new BuyListResponse(pageNum, buyResponses);
 	}
 
 	public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {

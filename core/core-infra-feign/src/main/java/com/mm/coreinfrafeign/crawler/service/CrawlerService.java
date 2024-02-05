@@ -23,24 +23,27 @@ public class CrawlerService {
 	public Item getZigZagItemByCrawler(String redirectUrl) {
 		ZigZagCrawlerResponse response = zigZagCrawlerClient.call(new ZigZagCrawlerRequest(redirectUrl));
 
-		List<ItemImage> itemImages = response.productImageList()
-			.stream()
-			.map(image -> ItemImage.builder()
-				.url(image.url())
-				.build())
-			.toList();
-
 		ItemCategoryType categoryType = getCategoryType(response);
 
-		return Item.builder()
+		Item item = Item.builder()
 			.price(response.finalPrice())
 			.title(response.name())
 			.redirectUrl(response.pageUrl())
 			.categoryType(categoryType)
-			.itemImages(itemImages)
 			.refund(getRefundPrice(response.finalPrice(), categoryType.getRefundPercent()))
 			.thumbnailUrl(response.thumbnailUrl())
 			.build();
+
+		List<ItemImage> itemImages = response.productImageList()
+			.stream()
+			.map(image -> ItemImage.builder()
+				.item(item)
+				.url(image.url())
+				.build())
+			.toList();
+
+		item.setItemImages(itemImages);
+		return item;
 	}
 
 	private static ItemCategoryType getCategoryType(ZigZagCrawlerResponse response) {

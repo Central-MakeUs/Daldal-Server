@@ -27,4 +27,16 @@ public class DibCustomRepositoryImpl implements DibCustomRepository {
 			.limit(PAGE_OFFSET)
 			.fetch();
 	}
+
+	@Override
+	public Long getPageNum(Member member) {
+		Long count = jpaQueryFactory.select(dib.count())
+			.from(dib)
+			.where(dib.member.eq(member))
+			.fetchOne();
+		if (count % PAGE_OFFSET != 0) {
+			return count / PAGE_OFFSET + 1;
+		}
+		return count / PAGE_OFFSET;
+	}
 }

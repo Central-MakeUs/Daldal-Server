@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### 상품 페이지 조회
-GET http://localhost:8080/api/v1/items
+GET http://localhost:8080/api/v1/items?page=2
 
 ### 상품 조회
 GET http://localhost:8080/api/v1/items/1

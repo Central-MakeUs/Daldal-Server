@@ -6,4 +6,6 @@ import com.mm.coredomain.domain.Buy;
 
 public interface BuyCustomRepository {
 	List<Buy> getBuysByPage(Integer page);
+
+	Long getPageNum();
 }

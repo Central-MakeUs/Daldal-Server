@@ -1,7 +1,5 @@
 package com.mm.api.domain.search.controller;
 
-import java.util.List;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseSearch;
-import com.mm.api.domain.item.dto.response.ItemResponse;
+import com.mm.api.domain.item.dto.response.ItemListResponse;
 import com.mm.api.domain.search.service.SearchService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
@@ -28,11 +26,11 @@ public class SearchController {
 
 	@Operation(summary = "키워드로 검색 합니다.")
 	@GetMapping("/search")
-	public CommonResponse<List<ItemResponse>> searchKeyword(
+	public CommonResponse<ItemListResponse> searchKeyword(
 		@RequestParam(required = false, defaultValue = "1") Integer page,
 		@RequestParam String keyword,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		List<ItemResponse> itemResponses = searchService.searchKeyword(page, keyword, userDetails);
+		ItemListResponse itemResponses = searchService.searchKeyword(page, keyword, userDetails);
 		return CommonResponse.ok(itemResponses);
 	}
 }
