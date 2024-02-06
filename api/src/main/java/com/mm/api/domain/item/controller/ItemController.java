@@ -39,14 +39,9 @@ public class ItemController {
 	@Operation(summary = "상품 글을 작성합니다.", description = """
 		itemCategoryType = [
 		    CLOTHES,
-			BAG,
-			SHOES,
 			FASHION,
-			STUFF,
-			JEWELRY,
 			BEAUTY,
-			FOOD,
-			LIFE
+			ETC
 		]
 		""")
 	@PostMapping("/items")
@@ -58,14 +53,9 @@ public class ItemController {
 	@Operation(summary = "상품 글을 업데이트합니다.", description = """
 		itemCategoryType = [
 		    CLOTHES,
-			BAG,
-			SHOES,
 			FASHION,
-			STUFF,
-			JEWELRY,
 			BEAUTY,
-			FOOD,
-			LIFE
+			ETC
 		]
 		""")
 	@PutMapping("/items/{id}")
@@ -85,14 +75,9 @@ public class ItemController {
 	@Operation(summary = "상품 글을 페이지 단위로 읽어옵니다.", description = """
 		itemCategoryType = [
 		    CLOTHES,
-			BAG,
-			SHOES,
 			FASHION,
-			STUFF,
-			JEWELRY,
 			BEAUTY,
-			FOOD,
-			LIFE
+			ETC
 		]
 		아무것도 넣지 않으면 전체에서 읽어옵니다.
 		""")

@@ -43,7 +43,7 @@ public class BuyController {
 		return CommonResponse.ok(responses);
 	}
 
-	@Operation(summary = "구매 인증 상태를 변경합니다.", description = "refundStatus = [UNDER_EXAMINATION,IN_PROGRESS, COMPLETED, REJECTED]")
+	@Operation(summary = "구매 인증 상태를 변경합니다.", description = "refundStatus = [IN_PROGRESS, COMPLETED, REJECTED]")
 	@PatchMapping("/buys/{buyId}/refund-status")
 	public CommonResponse<BuyResponse> updateBuyRefundStatus(@PathVariable Long buyId,
 		@RequestParam String refundStatus) {
