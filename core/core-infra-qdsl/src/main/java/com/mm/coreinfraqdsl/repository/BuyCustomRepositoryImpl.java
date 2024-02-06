@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.mm.coredomain.domain.Buy;
+import com.mm.coredomain.domain.Member;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
@@ -27,9 +28,30 @@ public class BuyCustomRepositoryImpl implements BuyCustomRepository {
 	}
 
 	@Override
+	public List<Buy> getBuysMeByPage(Integer page, Member member) {
+		return jpaQueryFactory.selectFrom(buy)
+			.where(buy.member.eq(member))
+			.offset((page - 1) * PAGE_OFFSET)
+			.limit(PAGE_OFFSET)
+			.fetch();
+	}
+
+	@Override
 	public Long getPageNum() {
 		Long count = jpaQueryFactory.select(buy.count())
 			.from(buy)
+			.fetchOne();
+		if (count % PAGE_OFFSET != 0) {
+			return count / PAGE_OFFSET + 1;
+		}
+		return count / PAGE_OFFSET;
+	}
+
+	@Override
+	public Long getBuysMePageNum(Member member) {
+		Long count = jpaQueryFactory.select(buy.count())
+			.from(buy)
+			.where(buy.member.eq(member))
 			.fetchOne();
 		if (count % PAGE_OFFSET != 0) {
 			return count / PAGE_OFFSET + 1;

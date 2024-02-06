@@ -1,7 +1,5 @@
 package com.mm.api.domain.buy.controller;
 
-import java.util.List;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +18,7 @@ import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseBuy;
 import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyListResponse;
+import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -79,8 +78,9 @@ public class BuyController {
 
 	@Operation(summary = "내 구매 인증을 전부 가져옵니다.")
 	@GetMapping("/buys/me")
-	public CommonResponse<List<BuyResponse>> getBuysMe(@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		List<BuyResponse> responses = buyService.getBuysMe(userDetails);
+	public CommonResponse<BuyMeListResponse> getBuysMe(@RequestParam(required = false, defaultValue = "1") Integer page,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+		BuyMeListResponse responses = buyService.getBuysMe(page, userDetails);
 		return CommonResponse.ok(responses);
 	}
 }
