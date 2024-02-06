@@ -1,7 +1,5 @@
 package com.mm.api.domain.point.controller;
 
-import java.util.List;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponsePoint;
-import com.mm.api.domain.buy.dto.response.BuyResponse;
+import com.mm.api.domain.point.dto.response.PointsResponse;
 import com.mm.api.domain.point.service.PointService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
@@ -34,17 +32,17 @@ public class PointController {
 
 	@Operation(summary = "현재 사용자의 누적 포인트 내역을 가져옵니다.")
 	@GetMapping("/points/history/cumulate")
-	public CommonResponse<List<BuyResponse>> getCumulativeHistory(
+	public CommonResponse<PointsResponse> getCumulativeHistory(
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		List<BuyResponse> responses = pointService.getCumulativeHistory(userDetails);
-		return CommonResponse.ok(responses);
+		PointsResponse response = pointService.getCumulativeHistory(userDetails);
+		return CommonResponse.ok(response);
 	}
 
 	@Operation(summary = "현재 사용자의 예상 포인트 내역을 가져옵니다..")
 	@GetMapping("/points/history/expect")
-	public CommonResponse<List<BuyResponse>> getExpectedHistory(
+	public CommonResponse<PointsResponse> getExpectedHistory(
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		List<BuyResponse> responses = pointService.getExpectedHistory(userDetails);
-		return CommonResponse.ok(responses);
+		PointsResponse response = pointService.getExpectedHistory(userDetails);
+		return CommonResponse.ok(response);
 	}
 }

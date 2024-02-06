@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mm.api.domain.buy.dto.response.BuyResponse;
+import com.mm.api.domain.point.dto.response.PointsResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
 import com.mm.coredomain.domain.Buy;
@@ -29,26 +30,48 @@ public class PointService {
 		return getMember(memberId).getPoint();
 	}
 
-	public List<BuyResponse> getCumulativeHistory(OAuth2UserDetails userDetails) {
+	public PointsResponse getCumulativeHistory(OAuth2UserDetails userDetails) {
 		Long memberId = userDetails.getId();
 		Member member = getMember(memberId);
 
-		return buyRepository.findAllByMember(member)
+		List<Buy> buys = buyRepository.findAllByMember(member);
+		List<BuyResponse> buyResponses = buys
 			.stream()
 			.filter(this::isRefundCumulative)
 			.map(BuyResponse::of)
 			.toList();
+		Integer totalPoint = buys.stream()
+			.filter(this::isRefundCumulativeTotalPoint)
+			.map(Buy::getRefund)
+			.reduce(0, Integer::sum);
+
+		return new PointsResponse(totalPoint, buyResponses);
 	}
 
-	public List<BuyResponse> getExpectedHistory(OAuth2UserDetails userDetails) {
+	public PointsResponse getExpectedHistory(OAuth2UserDetails userDetails) {
 		Long memberId = userDetails.getId();
 		Member member = getMember(memberId);
 
-		return buyRepository.findAllByMember(member)
+		List<Buy> buys = buyRepository.findAllByMember(member);
+		List<BuyResponse> buyResponses = buyRepository.findAllByMember(member)
 			.stream()
 			.filter(this::isRefundExpected)
 			.map(BuyResponse::of)
 			.toList();
+		Integer totalPoint = buys.stream()
+			.filter(this::isRefundExpectedTotalPoint)
+			.map(Buy::getRefund)
+			.reduce(0, Integer::sum);
+
+		return new PointsResponse(totalPoint, buyResponses);
+	}
+
+	private boolean isRefundCumulativeTotalPoint(Buy buy) {
+		return buy.getRefundStatus().equals(RefundStatus.COMPLETED);
+	}
+
+	private boolean isRefundExpectedTotalPoint(Buy buy) {
+		return buy.getRefundStatus().equals(RefundStatus.IN_PROGRESS);
 	}
 
 	private boolean isRefundCumulative(Buy buy) {
@@ -57,8 +80,7 @@ public class PointService {
 	}
 
 	private boolean isRefundExpected(Buy buy) {
-		return buy.getRefundStatus().equals(RefundStatus.COMPLETED) ||
-			buy.getRefundStatus().equals(RefundStatus.REJECTED);
+		return buy.getRefundStatus().equals(RefundStatus.IN_PROGRESS);
 	}
 
 	private Member getMember(Long memberId) {
