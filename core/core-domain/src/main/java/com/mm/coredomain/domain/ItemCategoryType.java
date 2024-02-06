@@ -5,13 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ItemCategoryType {
 	CLOTHES("의류", 3),
-	BAG("가방", 3),
-	SHOES("슈즈", 3),
 	FASHION("패션잡화", 3),
-	JEWELRY("주얼리", 3),
 	BEAUTY("뷰티", 3),
-	FOOD("푸드", 3),
-	LIFE("라이프", 3);
+	ETC("기타", 3);
 
 	private final String value;
 	private final Integer refundPercent;
@@ -27,7 +23,7 @@ public enum ItemCategoryType {
 				return categoryType;
 			}
 		}
-		return ItemCategoryType.FASHION;
+		return ItemCategoryType.ETC;
 	}
 
 	public static ItemCategoryType of(String input) {

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyListResponse;
+import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -86,12 +87,22 @@ public class BuyService {
 		return BuyResponse.of(buy);
 	}
 
-	public List<BuyResponse> getBuysMe(OAuth2UserDetails userDetails) {
+	public BuyMeListResponse getBuysMe(Integer page, OAuth2UserDetails userDetails) {
 		Member member = getMember(userDetails.getId());
-		return buyRepository.findAllByMember(member)
+
+		List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByPage(page, member)
 			.stream()
 			.map(BuyResponse::of)
 			.toList();
+
+		Long pageNum = buyCustomRepository.getBuysMePageNum(member);
+		Boolean isLastPage = pageNum.equals(page.longValue());
+
+		return new BuyMeListResponse(isLastPage, buyResponses);
+	}
+
+	public BuyResponse getBuyResponse(Long buyId) {
+		return BuyResponse.of(getBuy(buyId));
 	}
 
 	private Buy getBuy(Long buyId) {

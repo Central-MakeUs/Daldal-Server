@@ -1,7 +1,5 @@
 package com.mm.api.domain.buy.controller;
 
-import java.util.List;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +18,7 @@ import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseBuy;
 import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyListResponse;
+import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -44,7 +43,7 @@ public class BuyController {
 		return CommonResponse.ok(responses);
 	}
 
-	@Operation(summary = "구매 인증 상태를 변경합니다.", description = "refundStatus = [UNDER_EXAMINATION,IN_PROGRESS, COMPLETED, REJECTED]")
+	@Operation(summary = "구매 인증 상태를 변경합니다.", description = "refundStatus = [IN_PROGRESS, COMPLETED, REJECTED]")
 	@PatchMapping("/buys/{buyId}/refund-status")
 	public CommonResponse<BuyResponse> updateBuyRefundStatus(@PathVariable Long buyId,
 		@RequestParam String refundStatus) {
@@ -63,9 +62,18 @@ public class BuyController {
 	// 관리자 + 회원(자신만)
 	@Operation(summary = "구매 인증을 삭제합니다.")
 	@DeleteMapping("/buys/{buyId}")
-	public CommonResponse<?> deleteBuy(@PathVariable Long buyId) {
+	public CommonResponse<?> deleteBuy(@PathVariable Long buyId,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		buyService.deleteBuy(buyId);
 		return CommonResponse.noContent();
+	}
+
+	@Operation(summary = "구매 인증 단건을 조회합니다.")
+	@GetMapping("/buys/{buyId}")
+	public CommonResponse<BuyResponse> getBuy(@PathVariable Long buyId,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+		BuyResponse response = buyService.getBuyResponse(buyId);
+		return CommonResponse.ok(response);
 	}
 
 	// 회원만
@@ -77,10 +85,11 @@ public class BuyController {
 		return CommonResponse.ok(buyResponse);
 	}
 
-	@Operation(summary = "내 구매 인증을 전부 가져옵니다.")
+	@Operation(summary = "내 구매 인증을 페이지 단위로 가져옵니다.")
 	@GetMapping("/buys/me")
-	public CommonResponse<List<BuyResponse>> getBuysMe(@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		List<BuyResponse> responses = buyService.getBuysMe(userDetails);
+	public CommonResponse<BuyMeListResponse> getBuysMe(@RequestParam(required = false, defaultValue = "1") Integer page,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+		BuyMeListResponse responses = buyService.getBuysMe(page, userDetails);
 		return CommonResponse.ok(responses);
 	}
 }
