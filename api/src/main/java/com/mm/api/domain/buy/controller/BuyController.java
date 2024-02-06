@@ -62,9 +62,18 @@ public class BuyController {
 	// 관리자 + 회원(자신만)
 	@Operation(summary = "구매 인증을 삭제합니다.")
 	@DeleteMapping("/buys/{buyId}")
-	public CommonResponse<?> deleteBuy(@PathVariable Long buyId) {
+	public CommonResponse<?> deleteBuy(@PathVariable Long buyId,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		buyService.deleteBuy(buyId);
 		return CommonResponse.noContent();
+	}
+
+	@Operation(summary = "구매 인증 단건을 조회합니다.")
+	@GetMapping("/buys/{buyId}")
+	public CommonResponse<BuyResponse> getBuy(@PathVariable Long buyId,
+		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+		BuyResponse response = buyService.getBuyResponse(buyId);
+		return CommonResponse.ok(response);
 	}
 
 	// 회원만

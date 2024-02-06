@@ -101,6 +101,10 @@ public class BuyService {
 		return new BuyMeListResponse(isLastPage, buyResponses);
 	}
 
+	public BuyResponse getBuyResponse(Long buyId) {
+		return BuyResponse.of(getBuy(buyId));
+	}
+
 	private Buy getBuy(Long buyId) {
 		return buyRepository.findById(buyId)
 			.orElseThrow(() -> new CustomException(BUY_NOT_FOUND));
