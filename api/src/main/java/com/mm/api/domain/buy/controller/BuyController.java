@@ -85,7 +85,7 @@ public class BuyController {
 		return CommonResponse.ok(buyResponse);
 	}
 
-	@Operation(summary = "내 구매 인증을 전부 가져옵니다.")
+	@Operation(summary = "내 구매 인증을 페이지 단위로 가져옵니다.")
 	@GetMapping("/buys/me")
 	public CommonResponse<BuyMeListResponse> getBuysMe(@RequestParam(required = false, defaultValue = "1") Integer page,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
