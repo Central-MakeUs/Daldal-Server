@@ -19,12 +19,12 @@ public class HttpResponseUtil {
 		// response.setCharacterEncoding("UTF-8");
 		// response.getWriter().write(json);
 
-		String redirectUrl = "http://localhost:5173/search";
+		String redirectUrl = "http://localhost:5173";
 		StringBuffer sb = new StringBuffer(redirectUrl);
 		sb.append("?").append("access-token=").append(data.get("accessToken"));
 		sb.append("&").append("refresh-token=").append(data.get("refreshToken"));
 
-		response.sendRedirect(redirectUrl);
+		response.sendRedirect(sb.toString());
 	}
 
 	public static void writeErrorResponse(HttpServletResponse response, HttpStatus httpStatus, Object data) throws
@@ -39,6 +39,6 @@ public class HttpResponseUtil {
 		StringBuffer sb = new StringBuffer(redirectUrl);
 		sb.append("?").append("error-message=").append(data);
 
-		response.sendRedirect(redirectUrl);
+		response.sendRedirect(sb.toString());
 	}
 }
