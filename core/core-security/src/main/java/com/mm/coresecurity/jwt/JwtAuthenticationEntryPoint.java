@@ -1,23 +1,27 @@
 package com.mm.coresecurity.jwt;
 
-import java.io.IOException;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.stereotype.Component;
-
-import com.mm.coresecurity.util.HttpResponseUtil;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import java.io.IOException;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
-	@Override
-	public void commence(HttpServletRequest request, HttpServletResponse response,
-		AuthenticationException authException) throws IOException, ServletException {
-		HttpResponseUtil.writeErrorResponse(response, HttpStatus.FORBIDDEN, "로그인이 필요합니다.");
-	}
+    private final HandlerExceptionResolver resolver;
+
+    public JwtAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+        this.resolver = resolver;
+    }
+
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException, ServletException {
+        resolver.resolveException(request, response, null, (Exception) request.getAttribute("exception"));
+    }
 }
