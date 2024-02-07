@@ -21,7 +21,7 @@ public enum ItemCategoryType {
             "니트/카디건",
             "투피스/세트");
     private static final List<String> BottomsList = List.of(
-            "팬츠",
+            "바지",
             "스커트");
 
 
