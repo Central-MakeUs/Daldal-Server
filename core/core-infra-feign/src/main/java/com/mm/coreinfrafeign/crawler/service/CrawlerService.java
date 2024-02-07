@@ -46,7 +46,7 @@ public class CrawlerService {
 
     private static ItemCategoryType getCategoryType(ZigZagCrawlerResponse response) {
         String itemCategory = response.managedCategoryList().get(0).value();
-        if (itemCategory.equals("의류")) {
+        if (itemCategory.equals("패션의류")) {
             itemCategory = response.managedCategoryList().get(1).value();
             return ItemCategoryType.fromValueForClothes(itemCategory);
         }
