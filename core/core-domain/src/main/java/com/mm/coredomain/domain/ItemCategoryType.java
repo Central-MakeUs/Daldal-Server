@@ -2,6 +2,8 @@ package com.mm.coredomain.domain;
 
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 public enum ItemCategoryType {
     TOPS("상의", 3),
@@ -12,10 +14,30 @@ public enum ItemCategoryType {
 
     private final String value;
     private final Integer refundPercent;
+    private static final List<String> TopsList = List.of(
+            "상의",
+            "아우터",
+            "원피스",
+            "니트/카디건",
+            "투피스/세트");
+    private static final List<String> BottomsList = List.of(
+            "팬츠",
+            "스커트");
+
 
     ItemCategoryType(String value, Integer refundPercent) {
         this.value = value;
         this.refundPercent = refundPercent;
+    }
+
+    public static ItemCategoryType fromValueForClothes(String input) {
+        if (TopsList.contains(input)) {
+            return ItemCategoryType.TOPS;
+        }
+        if (BottomsList.contains(input)) {
+            return ItemCategoryType.BOTTOMS;
+        }
+        return ItemCategoryType.FASHION;
     }
 
     public static ItemCategoryType fromValue(String input) {
