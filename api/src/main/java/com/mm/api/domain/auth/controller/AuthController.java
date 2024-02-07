@@ -26,7 +26,12 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final AuthService authService;
 
-	@Operation(summary = "카카오 소셜 로그인을 합니다.")
+	@Operation(summary = "(구 방식) 소셜 로그인을 합니다. /oauth2/authorization/{provider}", description = "/oauth2/authorization/{provider}  provider는 KAKAO, APPLE")
+	@GetMapping("/dummy")
+	public void dummy(@RequestBody LoginKakaoRequest request) {
+	}
+
+	@Operation(summary = "(신 방식) 카카오 소셜 로그인을 합니다.")
 	@GetMapping("/api/v1/auth/login/kakao")
 	public CommonResponse<TokenResponse> loginKakao(@RequestBody LoginKakaoRequest request) {
 		TokenResponse response = authService.loginKakao(request);
