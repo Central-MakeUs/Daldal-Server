@@ -75,9 +75,9 @@ public class ItemController {
             아무것도 넣지 않으면 전체에서 읽어옵니다.
             """)
     @GetMapping("/items")
-    public CommonResponse<List<ItemResponse>> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
-                                                       @RequestParam(required = false) String itemCategoryType,
-                                                       @AuthenticationPrincipal OAuth2UserDetails userDetails) {
+    public CommonResponse<ItemListResponse> getItems(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                                     @RequestParam(required = false) String itemCategoryType,
+                                                     @AuthenticationPrincipal OAuth2UserDetails userDetails) {
         ItemListResponse responses = itemService.getItems(page, userDetails, itemCategoryType);
         return CommonResponse.ok(responses);
     }
@@ -88,5 +88,12 @@ public class ItemController {
                                                             @AuthenticationPrincipal OAuth2UserDetails userDetails) {
         ItemDetailResponse response = itemService.getItemDetail(id, userDetails);
         return CommonResponse.ok(response);
+    }
+
+    @Operation(summary = "추천 상품들을 읽어옵니다.")
+    @GetMapping("/items/suggested")
+    public CommonResponse<List<ItemResponse>> getSuggestedItems(@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+        List<ItemResponse> responses = itemService.getSuggestedItems(userDetails);
+        return CommonResponse.ok(responses);
     }
 }

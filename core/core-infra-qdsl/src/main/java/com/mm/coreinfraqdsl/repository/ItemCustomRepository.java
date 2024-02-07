@@ -1,11 +1,13 @@
 package com.mm.coreinfraqdsl.repository;
 
-import java.util.List;
-
 import com.mm.coredomain.domain.Item;
 
-public interface ItemCustomRepository {
-	List<Item> getItemsByPage(Integer page, String categoryType);
+import java.util.List;
 
-	Long getPageNum(String category);
+public interface ItemCustomRepository {
+    List<Item> getItemsByPage(Integer page, String categoryType);
+
+    List<Item> getSuggestedItems();
+
+    Long getPageNum(String category);
 }
