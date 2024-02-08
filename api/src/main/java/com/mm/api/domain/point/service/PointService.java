@@ -42,7 +42,7 @@ public class PointService {
 		List<BuyResponse> buyResponses = buys
 			.stream()
 			.filter(this::isRefundCumulative)
-			.map(BuyResponse::of)
+			.map(buy -> BuyResponse.of(buy, buy.getMember()))
 			.toList();
 		Integer totalPoint = buys.stream()
 			.filter(this::isRefundCumulativeTotalPoint)
@@ -61,7 +61,7 @@ public class PointService {
 		List<BuyResponse> buyResponses = buyRepository.findAllByMember(member)
 			.stream()
 			.filter(this::isRefundExpected)
-			.map(BuyResponse::of)
+			.map(buy -> BuyResponse.of(buy, buy.getMember()))
 			.toList();
 		Integer totalPoint = buys.stream()
 			.filter(this::isRefundExpectedTotalPoint)
@@ -84,7 +84,7 @@ public class PointService {
 			.build();
 
 		Buy savedBuy = buyRepository.save(buy);
-		return BuyResponse.of(savedBuy);
+		return BuyResponse.of(savedBuy, savedBuy.getMember());
 	}
 
 	private void isPointsEnoughForRefund(Integer refund, Member member) {

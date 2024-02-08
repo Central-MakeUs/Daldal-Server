@@ -95,21 +95,28 @@ public class AdminService {
 		item.setItemNotSuggested();
 	}
 
+	@Transactional(readOnly = true)
 	public WithdrawListResponse getWithdraws(Integer page) {
 		List<Buy> buys = adminCustomRepository.getWithdrawsAdminByPage(page);
 		List<WithdrawResponse> withdrawResponses = buys.stream()
-			.map(buy -> WithdrawResponse.of(buy, buy.getMember()))
+			.map(buy -> {
+				Member member = buy.getMember();
+				return WithdrawResponse.of(buy, member);
+			})
 			.toList();
 		Long pageNum = adminCustomRepository.getWithdrawsAdminPageNum();
 
 		return new WithdrawListResponse(pageNum, withdrawResponses);
 	}
 
+	@Transactional(readOnly = true)
 	public WithdrawListResponse getWithdrawsByMember(Integer page, Long memberId) {
 		Member member = getMember(memberId);
 		List<Buy> buys = adminCustomRepository.getWithdrawsAdminByPageByMember(page, member);
 		List<WithdrawResponse> withdrawResponses = buys.stream()
-			.map(buy -> WithdrawResponse.of(buy, buy.getMember()))
+			.map(buy -> {
+				return WithdrawResponse.of(buy, member);
+			})
 			.toList();
 		Long pageNum = adminCustomRepository.getWithdrawsAdminPageNumByMember(member);
 

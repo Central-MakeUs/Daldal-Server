@@ -50,7 +50,7 @@ public class MemberController {
 	}
 
 	@Operation(summary = "사용자 닉네임을 변경합니다.")
-	@PatchMapping("/members/{memberId}/name")
+	@PatchMapping("/members/me/nickname")
 	public CommonResponse<?> updateMemberName(@AuthenticationPrincipal OAuth2UserDetails userDetails,
 		@RequestParam(value = "name") String name) {
 		memberService.updateMemberName(userDetails, name);

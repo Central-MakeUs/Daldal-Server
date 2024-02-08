@@ -58,7 +58,7 @@ public class Buy extends BaseEntity {
 	}
 
 	public void updatePointsAfterRefund(Integer point) {
-		pointsBeforeRefund = point;
+		pointsAfterRefund = point;
 	}
 
 	public void updateRefundStatus(RefundStatus refundStatus) {
