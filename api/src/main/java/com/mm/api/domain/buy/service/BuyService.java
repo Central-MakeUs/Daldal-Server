@@ -1,5 +1,14 @@
 package com.mm.api.domain.buy.service;
 
+import static com.mm.api.exception.ErrorCode.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
@@ -16,120 +25,112 @@ import com.mm.coredomain.repository.MemberRepository;
 import com.mm.coreinfraqdsl.repository.BuyCustomRepository;
 import com.mm.coreinfras3.util.S3Service;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.mm.api.exception.ErrorCode.BUY_NOT_FOUND;
-import static com.mm.api.exception.ErrorCode.ITEM_NOT_FOUND;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class BuyService {
-    private final BuyRepository buyRepository;
-    private final MemberRepository memberRepository;
-    private final ItemRepository itemRepository;
-    private final S3Service s3Service;
-    private final BuyCustomRepository buyCustomRepository;
+	private final BuyRepository buyRepository;
+	private final MemberRepository memberRepository;
+	private final ItemRepository itemRepository;
+	private final S3Service s3Service;
+	private final BuyCustomRepository buyCustomRepository;
 
-    public BuyResponse postBuy(Long memberId, Long itemId, MultipartFile file) {
-        Member member = getMember(memberId);
-        Item item = getItem(itemId);
+	public BuyResponse postBuy(OAuth2UserDetails userDetails, Long itemId, MultipartFile file) {
+		Member member = getMember(userDetails.getId());
+		Item item = getItem(itemId);
 
-        String url = s3Service.uploadFileToS3(file, memberId, itemId);
+		String url = s3Service.uploadFileToS3(file, member.getId(), itemId);
 
-        Buy buy = Buy.builder()
-                .member(member)
-                .item(item)
-                .redirectUrl(item.getRedirectUrl())
-                .refund(item.getRefund())
-                .refundStatus(RefundStatus.IN_PROGRESS)
-                .uploadTime(LocalDateTime.now())
-                .certImageUrl(url)
-                .build();
+		Buy buy = Buy.builder()
+			.member(member)
+			.item(item)
+			.redirectUrl(item.getRedirectUrl())
+			.refund(item.getRefund())
+			.refundStatus(RefundStatus.IN_PROGRESS)
+			.uploadTime(LocalDateTime.now())
+			.certImageUrl(url)
+			.build();
 
-        return BuyResponse.of(buyRepository.save(buy));
-    }
+		return BuyResponse.of(buyRepository.save(buy));
+	}
 
-    public BuyResponse updateBuyRefundStatus(Long buyId, String refundStatus) {
-        RefundStatus convertedRefundStatus = RefundStatus.of(refundStatus);
-        Buy buy = getBuy(buyId);
-        buy.updateRefundStatus(convertedRefundStatus);
+	public BuyResponse updateBuyRefundStatus(Long buyId, String refundStatus) {
+		RefundStatus convertedRefundStatus = RefundStatus.of(refundStatus);
+		Buy buy = getBuy(buyId);
+		buy.updateRefundStatus(convertedRefundStatus);
 
-        return BuyResponse.of(buy);
-    }
+		return BuyResponse.of(buy);
+	}
 
-    public void deleteBuy(Long buyId) {
-        Buy buy = getBuy(buyId);
-        buyRepository.delete(buy);
-    }
+	public void deleteBuy(Long buyId) {
+		Buy buy = getBuy(buyId);
+		buyRepository.delete(buy);
+	}
 
-    @Transactional(readOnly = true)
-    public BuyListResponse getBuys(Integer page) {
-        List<Buy> buys = buyCustomRepository.getBuysByPage(page);
-        List<BuyResponse> buyResponses = buys.stream()
-                .map(BuyResponse::of)
-                .toList();
+	@Transactional(readOnly = true)
+	public BuyListResponse getBuys(Integer page) {
+		List<Buy> buys = buyCustomRepository.getBuysByPage(page);
+		List<BuyResponse> buyResponses = buys.stream()
+			.map(BuyResponse::of)
+			.toList();
 
-        Long pageNum = buyCustomRepository.getPageNum();
-        return new BuyListResponse(pageNum, buyResponses);
-    }
+		Long pageNum = buyCustomRepository.getPageNum();
+		return new BuyListResponse(pageNum, buyResponses);
+	}
 
-    public BuyResponse approveBuyRefundStatus(Long buyId) {
-        Buy buy = getBuy(buyId);
-        buy.approveRefundStatus();
+	public BuyResponse approveBuyRefundStatus(Long buyId) {
+		Buy buy = getBuy(buyId);
+		buy.approveRefundStatus();
 
-        buy.setApprovedTimeNow();
+		buy.setApprovedTimeNow();
 
-        Member member = buy.getMember();
-        member.plusMemberPoint(buy.getRefund());
-        return BuyResponse.of(buy);
-    }
+		Member member = buy.getMember();
+		member.plusMemberPoint(buy.getRefund());
+		return BuyResponse.of(buy);
+	}
 
-    public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {
-        Buy buy = getBuy(buyId);
-        buy.rejectRefundStatus(request.rejectReason());
+	public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {
+		Buy buy = getBuy(buyId);
+		buy.rejectRefundStatus(request.rejectReason());
 
-        buy.setApprovedTimeNow();
+		buy.setApprovedTimeNow();
 
-        return BuyResponse.of(buy);
-    }
+		return BuyResponse.of(buy);
+	}
 
-    public BuyMeListResponse getBuysMe(Integer page, OAuth2UserDetails userDetails) {
-        Member member = getMember(userDetails.getId());
+	public BuyMeListResponse getBuysMe(Integer page, OAuth2UserDetails userDetails) {
+		Member member = getMember(userDetails.getId());
 
-        List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByPage(page, member)
-                .stream()
-                .map(BuyResponse::of)
-                .toList();
+		List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByPage(page, member)
+			.stream()
+			.map(BuyResponse::of)
+			.toList();
 
-        Long pageNum = buyCustomRepository.getBuysMePageNum(member);
-        Boolean isLastPage = pageNum.equals(page.longValue());
+		Long pageNum = buyCustomRepository.getBuysMePageNum(member);
+		Boolean isLastPage = pageNum.equals(page.longValue());
 
-        return new BuyMeListResponse(isLastPage, buyResponses);
-    }
+		return new BuyMeListResponse(isLastPage, buyResponses);
+	}
 
-    public BuyResponse getBuyResponse(Long buyId) {
-        return BuyResponse.of(getBuy(buyId));
-    }
+	public BuyResponse getBuyResponse(Long buyId) {
+		return BuyResponse.of(getBuy(buyId));
+	}
 
-    private Buy getBuy(Long buyId) {
-        return buyRepository.findById(buyId)
-                .orElseThrow(() -> new CustomException(BUY_NOT_FOUND));
-    }
+	private Buy getBuy(Long buyId) {
+		return buyRepository.findById(buyId)
+			.orElseThrow(() -> new CustomException(BUY_NOT_FOUND));
+	}
 
-    private Item getItem(Long id) {
-        return itemRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-    }
+	private Item getItem(Long id) {
+		return itemRepository.findById(id)
+			.orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+	}
 
-    private Member getMember(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-    }
+	private Member getMember(Long memberId) {
+		return memberRepository.findById(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+	}
 }

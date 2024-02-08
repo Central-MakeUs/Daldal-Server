@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseMember;
 import com.mm.api.domain.member.dto.request.UpdateMemberAccountRequest;
+import com.mm.api.domain.member.dto.response.MemberAccountResponse;
 import com.mm.api.domain.member.dto.response.MemberInfoResponse;
 import com.mm.api.domain.member.service.MemberService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -29,13 +30,20 @@ public class MemberController {
 	private final MemberService memberService;
 
 	// 유저
+	@Operation(summary = "내 계좌 정보를 가져옵니다.")
+	@GetMapping("/members/me/account")
+	public CommonResponse<MemberAccountResponse> getMyAccount(@AuthenticationPrincipal OAuth2UserDetails userDetails) {
+		MemberAccountResponse response = memberService.getMyAccount(userDetails);
+		return CommonResponse.ok(response);
+	}
+
 	@Operation(summary = "내 계좌 정보를 업데이트합니다.", description = """
 		depositorName - 입금자명  
 		account - 계좌번호  
 		accountBank - 은행
 		""")
 	@PatchMapping("/members/me/account")
-	public CommonResponse<?> updateMemberAccount(@RequestBody UpdateMemberAccountRequest request,
+	public CommonResponse<?> updateMyAccount(@RequestBody UpdateMemberAccountRequest request,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
 		memberService.updateMemberAccount(userDetails, request);
 		return CommonResponse.noContent();

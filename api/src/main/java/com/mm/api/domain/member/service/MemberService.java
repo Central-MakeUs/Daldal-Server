@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mm.api.domain.member.dto.request.UpdateMemberAccountRequest;
+import com.mm.api.domain.member.dto.response.MemberAccountResponse;
 import com.mm.api.domain.member.dto.response.MemberInfoResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
@@ -29,9 +30,20 @@ public class MemberService {
 		member.updateMemberName(name);
 	}
 
+	@Transactional(readOnly = true)
 	public MemberInfoResponse getMemberInfo(Long memberId) {
 		Member member = getMember(memberId);
 		return MemberInfoResponse.of(member);
+	}
+
+	@Transactional(readOnly = true)
+	public MemberAccountResponse getMyAccount(OAuth2UserDetails userDetails) {
+		Member member = getMember(userDetails.getId());
+		return MemberAccountResponse.builder()
+			.account(member.getAccount())
+			.accountBank(member.getAccountBank())
+			.depositorName(member.getDepositorName())
+			.build();
 	}
 
 	private Member getMember(Long memberId) {
