@@ -34,6 +34,8 @@ public class Buy extends BaseEntity {
 
 	private Integer pointsBeforeRefund;
 
+	private Integer pointsAfterRefund;
+
 	private Integer refund;
 
 	private RefundStatus refundStatus;
@@ -48,6 +50,14 @@ public class Buy extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Item item;
+
+	public void updatePointsBeforeRefund(Integer point) {
+		pointsBeforeRefund = point;
+	}
+
+	public void updatePointsAfterRefund(Integer point) {
+		pointsBeforeRefund = point;
+	}
 
 	public void updateRefundStatus(RefundStatus refundStatus) {
 		this.refundStatus = refundStatus;

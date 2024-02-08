@@ -11,6 +11,9 @@ import lombok.Builder;
 public record BuyResponse(Long id,
 						  String redirectUrl,
 						  LocalDateTime uploadTime,
+						  LocalDateTime approvedTime,
+						  Integer pointsBeforeRefund,
+						  Integer pointsAfterRefund,
 						  Integer refund,
 						  RefundStatus refundStatus,
 						  String rejectReason,
@@ -20,6 +23,9 @@ public record BuyResponse(Long id,
 			.id(buy.getId())
 			.redirectUrl(buy.getRedirectUrl())
 			.uploadTime(buy.getUploadTime())
+			.approvedTime(buy.getApprovedTime())
+			.pointsBeforeRefund(buy.getPointsBeforeRefund())
+			.pointsAfterRefund(buy.getPointsAfterRefund())
 			.refund(buy.getRefund())
 			.refundStatus(buy.getRefundStatus())
 			.rejectReason(buy.getRejectReason())

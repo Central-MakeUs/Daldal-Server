@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -16,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseBuy;
-import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
@@ -48,21 +46,6 @@ public class BuyController {
 	public CommonResponse<BuyResponse> updateBuyRefundStatus(@PathVariable Long buyId,
 		@RequestParam String refundStatus) {
 		BuyResponse response = buyService.updateBuyRefundStatus(buyId, refundStatus);
-		return CommonResponse.ok(response);
-	}
-
-	@Operation(summary = "구매 인증을 승인 처리합니다.")
-	@PatchMapping("/buys/{buyId}/approve")
-	public CommonResponse<BuyResponse> approveBuyRefundStatus(@PathVariable Long buyId) {
-		BuyResponse response = buyService.approveBuyRefundStatus(buyId);
-		return CommonResponse.ok(response);
-	}
-
-	@Operation(summary = "구매 인증을 미승인 처리합니다.", description = "미승인 사유를 입력해주세요.")
-	@PatchMapping("/buys/{buyId}/reject")
-	public CommonResponse<BuyResponse> rejectBuyRefundStatus(@PathVariable Long buyId,
-		@RequestBody RejectBuyRefundStatusRequest request) {
-		BuyResponse response = buyService.rejectBuyRefundStatus(buyId, request);
 		return CommonResponse.ok(response);
 	}
 

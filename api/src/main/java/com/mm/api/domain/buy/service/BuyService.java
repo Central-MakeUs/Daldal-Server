@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mm.api.domain.buy.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
@@ -79,26 +78,6 @@ public class BuyService {
 
 		Long pageNum = buyCustomRepository.getPageNum();
 		return new BuyListResponse(pageNum, buyResponses);
-	}
-
-	public BuyResponse approveBuyRefundStatus(Long buyId) {
-		Buy buy = getBuy(buyId);
-		buy.approveRefundStatus();
-
-		buy.setApprovedTimeNow();
-
-		Member member = buy.getMember();
-		member.plusMemberPoint(buy.getRefund());
-		return BuyResponse.of(buy);
-	}
-
-	public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {
-		Buy buy = getBuy(buyId);
-		buy.rejectRefundStatus(request.rejectReason());
-
-		buy.setApprovedTimeNow();
-
-		return BuyResponse.of(buy);
 	}
 
 	public BuyMeListResponse getBuysMe(Integer page, OAuth2UserDetails userDetails) {
