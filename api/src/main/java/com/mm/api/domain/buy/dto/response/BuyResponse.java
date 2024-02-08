@@ -14,6 +14,7 @@ public record BuyResponse(Long id,
 						  LocalDateTime approvedTime,
 						  Integer pointsBeforeRefund,
 						  Integer pointsAfterRefund,
+						  Integer purchase,
 						  Integer refund,
 						  RefundStatus refundStatus,
 						  String rejectReason,
@@ -26,6 +27,7 @@ public record BuyResponse(Long id,
 			.approvedTime(buy.getApprovedTime())
 			.pointsBeforeRefund(buy.getPointsBeforeRefund())
 			.pointsAfterRefund(buy.getPointsAfterRefund())
+			.purchase(buy.getPurchase())
 			.refund(buy.getRefund())
 			.refundStatus(buy.getRefundStatus())
 			.rejectReason(buy.getRejectReason())

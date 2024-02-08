@@ -47,6 +47,7 @@ public class BuyService {
 			.member(member)
 			.item(item)
 			.redirectUrl(item.getRedirectUrl())
+			.purchase(item.getPrice())
 			.refund(item.getRefund())
 			.refundStatus(RefundStatus.IN_PROGRESS)
 			.uploadTime(LocalDateTime.now())
@@ -70,20 +71,17 @@ public class BuyService {
 	}
 
 	@Transactional(readOnly = true)
-	public BuyListResponse getBuys(Integer page) {
-		List<Buy> buys = buyCustomRepository.getBuysByPage(page);
-		List<BuyResponse> buyResponses = buys.stream()
-			.map(BuyResponse::of)
-			.toList();
-
-		Long pageNum = buyCustomRepository.getPageNum();
-		return new BuyListResponse(pageNum, buyResponses);
+	public BuyListResponse getBuys(Integer page, Long memberId) {
+		if (memberId == null) {
+			return getBuyListResponseByMember(page, memberId);
+		}
+		return getBuyListResponseWhole(page);
 	}
 
 	public BuyMeListResponse getBuysMe(Integer page, OAuth2UserDetails userDetails) {
 		Member member = getMember(userDetails.getId());
 
-		List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByPage(page, member)
+		List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByMember(page, member)
 			.stream()
 			.map(BuyResponse::of)
 			.toList();
@@ -101,6 +99,26 @@ public class BuyService {
 	private Buy getBuy(Long buyId) {
 		return buyRepository.findById(buyId)
 			.orElseThrow(() -> new CustomException(BUY_NOT_FOUND));
+	}
+
+	private BuyListResponse getBuyListResponseWhole(Integer page) {
+		List<Buy> buys = buyCustomRepository.getBuysByPage(page);
+		List<BuyResponse> buyResponses = buys.stream()
+			.map(BuyResponse::of)
+			.toList();
+
+		Long pageNum = buyCustomRepository.getPageNum();
+		return new BuyListResponse(pageNum, buyResponses);
+	}
+
+	private BuyListResponse getBuyListResponseByMember(Integer page, Long memberId) {
+		Member member = getMember(memberId);
+		List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByMember(page, member)
+			.stream()
+			.map(BuyResponse::of)
+			.toList();
+		Long pageNum = buyCustomRepository.getBuysMePageNum(member);
+		return new BuyListResponse(pageNum, buyResponses);
 	}
 
 	private Item getItem(Long id) {

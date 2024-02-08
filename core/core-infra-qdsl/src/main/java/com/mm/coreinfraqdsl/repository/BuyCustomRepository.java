@@ -8,7 +8,7 @@ import com.mm.coredomain.domain.Member;
 public interface BuyCustomRepository {
 	List<Buy> getBuysByPage(Integer page);
 
-	List<Buy> getBuysMeByPage(Integer page, Member member);
+	List<Buy> getBuysMeByMember(Integer page, Member member);
 
 	Long getPageNum();
 

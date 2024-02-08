@@ -36,6 +36,8 @@ public class Buy extends BaseEntity {
 
 	private Integer pointsAfterRefund;
 
+	private Integer purchase;
+
 	private Integer refund;
 
 	private RefundStatus refundStatus;

@@ -69,8 +69,9 @@ public class AdminController {
 
 	@Operation(summary = "전체 구매 인증을 페이지 단위로 가져옵니다.")
 	@GetMapping("/buys")
-	public CommonResponse<BuyListResponse> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
-		BuyListResponse responses = buyService.getBuys(page);
+	public CommonResponse<BuyListResponse> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page,
+		@RequestParam(required = false) Long memberId) {
+		BuyListResponse responses = buyService.getBuys(page, memberId);
 		return CommonResponse.ok(responses);
 	}
 

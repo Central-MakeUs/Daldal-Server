@@ -29,7 +29,7 @@ public class BuyCustomRepositoryImpl implements BuyCustomRepository {
 	}
 
 	@Override
-	public List<Buy> getBuysMeByPage(Integer page, Member member) {
+	public List<Buy> getBuysMeByMember(Integer page, Member member) {
 		return jpaQueryFactory.selectFrom(buy)
 			.where(buy.member.eq(member))
 			.offset((page - 1) * PAGE_OFFSET_ME)
