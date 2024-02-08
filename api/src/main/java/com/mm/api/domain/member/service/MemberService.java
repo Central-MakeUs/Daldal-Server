@@ -9,6 +9,7 @@ import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
 import com.mm.coredomain.domain.Member;
 import com.mm.coredomain.repository.MemberRepository;
+import com.mm.coresecurity.oauth.OAuth2UserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,14 +19,13 @@ import lombok.RequiredArgsConstructor;
 public class MemberService {
 	private final MemberRepository memberRepository;
 
-	// 관리자 + 회원 권한(자신만)
-	public void updateMemberAccount(Long memberId, UpdateMemberAccountRequest request) {
-		Member member = getMember(memberId);
+	public void updateMemberAccount(OAuth2UserDetails userDetails, UpdateMemberAccountRequest request) {
+		Member member = getMember(userDetails.getId());
 		member.updateMemberAccount(request.depositorName(), request.account(), request.accountBank());
 	}
 
-	public void updateMemberName(Long memberId, String name) {
-		Member member = getMember(memberId);
+	public void updateMemberName(OAuth2UserDetails userDetails, String name) {
+		Member member = getMember(userDetails.getId());
 		member.updateMemberName(name);
 	}
 
