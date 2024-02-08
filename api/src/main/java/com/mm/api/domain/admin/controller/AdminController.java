@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.domain.admin.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.admin.dto.response.AdminItemListResponse;
+import com.mm.api.domain.admin.dto.response.BuyListResponse;
+import com.mm.api.domain.admin.dto.response.WithdrawListResponse;
 import com.mm.api.domain.admin.service.AdminService;
-import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
@@ -67,11 +68,10 @@ public class AdminController {
 		return CommonResponse.noContent();
 	}
 
-	@Operation(summary = "전체 구매 인증을 페이지 단위로 가져옵니다.")
+	@Operation(summary = "전체 구매 인증을 페이지 단위로 가져옵니다")
 	@GetMapping("/buys")
-	public CommonResponse<BuyListResponse> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page,
-		@RequestParam(required = false) Long memberId) {
-		BuyListResponse responses = buyService.getBuys(page, memberId);
+	public CommonResponse<BuyListResponse> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		BuyListResponse responses = adminService.getBuys(page);
 		return CommonResponse.ok(responses);
 	}
 
@@ -87,6 +87,23 @@ public class AdminController {
 	public CommonResponse<BuyResponse> rejectBuyRefundStatus(@PathVariable Long buyId,
 		@RequestBody RejectBuyRefundStatusRequest request) {
 		BuyResponse response = adminService.rejectBuyRefundStatus(buyId, request);
+		return CommonResponse.ok(response);
+	}
+
+	@Operation(summary = "전체 출금 신청을 페이지 단위로 가져옵니다")
+	@GetMapping("/buys/{buyId}/withdraw")
+	public CommonResponse<WithdrawListResponse> getWithdraws(
+		@RequestParam(required = false, defaultValue = "1") Integer page) {
+		WithdrawListResponse response = adminService.getWithdraws(page);
+		return CommonResponse.ok(response);
+	}
+
+	@Operation(summary = "특정 유저 출금 신청을 페이지 단위로 가져옵니다")
+	@GetMapping("/buys/{buyId}/withdraw")
+	public CommonResponse<WithdrawListResponse> getWithdraws(
+		@RequestParam(required = false, defaultValue = "1") Integer page,
+		@RequestParam(required = true) Long memberId) {
+		WithdrawListResponse response = adminService.getWithdrawsByMember(page, memberId);
 		return CommonResponse.ok(response);
 	}
 

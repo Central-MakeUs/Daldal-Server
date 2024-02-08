@@ -11,6 +11,7 @@ public record MemberInfoResponse(Long id,
 								 String name,
 								 String email,
 								 Integer point,
+								 String depositor,
 								 String account,
 								 String accountBank,
 								 MemberStatus memberStatus,
@@ -22,6 +23,7 @@ public record MemberInfoResponse(Long id,
 			.name(member.getName())
 			.email(member.getEmail())
 			.point(member.getPoint())
+			.depositor(member.getDepositorName())
 			.account(member.getAccount())
 			.accountBank(member.getAccountBank())
 			.memberStatus(member.getMemberStatus())

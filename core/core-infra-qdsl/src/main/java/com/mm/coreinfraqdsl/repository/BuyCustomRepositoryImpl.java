@@ -21,31 +21,12 @@ public class BuyCustomRepositoryImpl implements BuyCustomRepository {
 	private static final Long PAGE_OFFSET_ME = 9L;
 
 	@Override
-	public List<Buy> getBuysByPage(Integer page) {
-		return jpaQueryFactory.selectFrom(buy)
-			.offset((page - 1) * PAGE_OFFSET)
-			.limit(PAGE_OFFSET)
-			.fetch();
-	}
-
-	@Override
 	public List<Buy> getBuysMeByMember(Integer page, Member member) {
 		return jpaQueryFactory.selectFrom(buy)
 			.where(buy.member.eq(member))
 			.offset((page - 1) * PAGE_OFFSET_ME)
 			.limit(PAGE_OFFSET_ME)
 			.fetch();
-	}
-
-	@Override
-	public Long getPageNum() {
-		Long count = jpaQueryFactory.select(buy.count())
-			.from(buy)
-			.fetchOne();
-		if (count % PAGE_OFFSET != 0) {
-			return count / PAGE_OFFSET + 1;
-		}
-		return count / PAGE_OFFSET;
 	}
 
 	@Override

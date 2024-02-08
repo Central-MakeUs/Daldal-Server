@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.exception.CustomException;
@@ -54,7 +53,7 @@ public class BuyService {
 			.certImageUrl(url)
 			.build();
 
-		return BuyResponse.of(buyRepository.save(buy));
+		return BuyResponse.of(buyRepository.save(buy), buy.getMember());
 	}
 
 	public BuyResponse updateBuyRefundStatus(Long buyId, String refundStatus) {
@@ -62,7 +61,7 @@ public class BuyService {
 		Buy buy = getBuy(buyId);
 		buy.updateRefundStatus(convertedRefundStatus);
 
-		return BuyResponse.of(buy);
+		return BuyResponse.of(buy, buy.getMember());
 	}
 
 	public void deleteBuy(Long buyId) {
@@ -70,20 +69,12 @@ public class BuyService {
 		buyRepository.delete(buy);
 	}
 
-	@Transactional(readOnly = true)
-	public BuyListResponse getBuys(Integer page, Long memberId) {
-		if (memberId == null) {
-			return getBuyListResponseByMember(page, memberId);
-		}
-		return getBuyListResponseWhole(page);
-	}
-
 	public BuyMeListResponse getBuysMe(Integer page, OAuth2UserDetails userDetails) {
 		Member member = getMember(userDetails.getId());
 
 		List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByMember(page, member)
 			.stream()
-			.map(BuyResponse::of)
+			.map(buy -> BuyResponse.of(buy, buy.getMember()))
 			.toList();
 
 		Long pageNum = buyCustomRepository.getBuysMePageNum(member);
@@ -93,32 +84,13 @@ public class BuyService {
 	}
 
 	public BuyResponse getBuyResponse(Long buyId) {
-		return BuyResponse.of(getBuy(buyId));
+		Buy buy = getBuy(buyId);
+		return BuyResponse.of(buy, buy.getMember());
 	}
 
 	private Buy getBuy(Long buyId) {
 		return buyRepository.findById(buyId)
 			.orElseThrow(() -> new CustomException(BUY_NOT_FOUND));
-	}
-
-	private BuyListResponse getBuyListResponseWhole(Integer page) {
-		List<Buy> buys = buyCustomRepository.getBuysByPage(page);
-		List<BuyResponse> buyResponses = buys.stream()
-			.map(BuyResponse::of)
-			.toList();
-
-		Long pageNum = buyCustomRepository.getPageNum();
-		return new BuyListResponse(pageNum, buyResponses);
-	}
-
-	private BuyListResponse getBuyListResponseByMember(Integer page, Long memberId) {
-		Member member = getMember(memberId);
-		List<BuyResponse> buyResponses = buyCustomRepository.getBuysMeByMember(page, member)
-			.stream()
-			.map(BuyResponse::of)
-			.toList();
-		Long pageNum = buyCustomRepository.getBuysMePageNum(member);
-		return new BuyListResponse(pageNum, buyResponses);
 	}
 
 	private Item getItem(Long id) {
