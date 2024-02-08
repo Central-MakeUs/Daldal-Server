@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponseBuy;
-import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyMeListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.buy.service.BuyService;
@@ -34,13 +33,6 @@ public class BuyController {
 	private final BuyService buyService;
 
 	// 관리자만
-	@Operation(summary = "전체 구매 인증을 페이지 단위로 가져옵니다.")
-	@GetMapping("/buys")
-	public CommonResponse<BuyListResponse> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
-		BuyListResponse responses = buyService.getBuys(page);
-		return CommonResponse.ok(responses);
-	}
-
 	@Operation(summary = "구매 인증 상태를 변경합니다.", description = "refundStatus = [IN_PROGRESS, COMPLETED, REJECTED]")
 	@PatchMapping("/buys/{buyId}/refund-status")
 	public CommonResponse<BuyResponse> updateBuyRefundStatus(@PathVariable Long buyId,
@@ -49,7 +41,6 @@ public class BuyController {
 		return CommonResponse.ok(response);
 	}
 
-	// 관리자 + 회원(자신만)
 	@Operation(summary = "구매 인증을 삭제합니다.")
 	@DeleteMapping("/buys/{buyId}")
 	public CommonResponse<?> deleteBuy(@PathVariable Long buyId,

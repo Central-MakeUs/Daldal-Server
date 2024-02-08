@@ -13,7 +13,9 @@ import com.mm.api.common.response.CommonResponse;
 import com.mm.api.domain.admin.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.admin.dto.response.AdminItemListResponse;
 import com.mm.api.domain.admin.service.AdminService;
+import com.mm.api.domain.buy.dto.response.BuyListResponse;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
+import com.mm.api.domain.buy.service.BuyService;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminController {
 	private final AdminService adminService;
+	private final BuyService buyService;
 
 	@Operation(summary = "url을 입력해 상품글을 크롤링합니다.", description = "zigzag url만 가능, ex) https://s.zigzag.kr/dV7jnGouAl?af=1")
 	@PostMapping("/items/crawl")
@@ -64,6 +67,13 @@ public class AdminController {
 		return CommonResponse.noContent();
 	}
 
+	@Operation(summary = "전체 구매 인증을 페이지 단위로 가져옵니다.")
+	@GetMapping("/buys")
+	public CommonResponse<BuyListResponse> getBuys(@RequestParam(required = false, defaultValue = "1") Integer page) {
+		BuyListResponse responses = buyService.getBuys(page);
+		return CommonResponse.ok(responses);
+	}
+
 	@Operation(summary = "구매 인증을 승인 처리합니다")
 	@PatchMapping("/buys/{buyId}/approve")
 	public CommonResponse<BuyResponse> approveBuyRefundStatus(@PathVariable Long buyId) {
@@ -80,14 +90,14 @@ public class AdminController {
 	}
 
 	@Operation(summary = "출금 신청을 승인 처리합니다")
-	@PatchMapping("/points/{buyId}/withdraw/approve")
+	@PatchMapping("/buys/{buyId}/withdraw/approve")
 	public CommonResponse<BuyResponse> approvePointsWithdraw(@PathVariable Long buyId) {
 		BuyResponse response = adminService.approvePointsWithdraw(buyId);
 		return CommonResponse.ok(response);
 	}
 
 	@Operation(summary = "출금 신청을 미승인 처리합니다")
-	@PatchMapping("/points/{buyId}/withdraw/reject")
+	@PatchMapping("/buys/{buyId}/withdraw/reject")
 	public CommonResponse<BuyResponse> rejectPointsWithdraw(@PathVariable Long buyId,
 		@RequestBody RejectBuyRefundStatusRequest request) {
 		BuyResponse response = adminService.rejectPointsWithdraw(buyId, request);
