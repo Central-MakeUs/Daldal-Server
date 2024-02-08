@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mm.api.common.response.CommonResponse;
 import com.mm.api.common.swaggerAnnotation.SwaggerResponsePoint;
+import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.point.dto.response.PointsResponse;
 import com.mm.api.domain.point.service.PointService;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -51,8 +52,9 @@ public class PointController {
 
 	@Operation(summary = "포인트 출금을 신청합니다.")
 	@PostMapping("/points/withdraw")
-	public CommonResponse postPointsWithdraw(@RequestParam Integer refund,
+	public CommonResponse<BuyResponse> postPointsWithdraw(@RequestParam Integer refund,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		pointService.postPointsWithdraw(userDetails, refund);
+		BuyResponse response = pointService.postPointsWithdraw(userDetails, refund);
+		return CommonResponse.created(response);
 	}
 }

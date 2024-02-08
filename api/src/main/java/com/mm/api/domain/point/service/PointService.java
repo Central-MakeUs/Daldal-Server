@@ -71,7 +71,7 @@ public class PointService {
 		return new PointsResponse(totalPoint, buyResponses);
 	}
 
-	public void postPointsWithdraw(OAuth2UserDetails userDetails, Integer refund) {
+	public BuyResponse postPointsWithdraw(OAuth2UserDetails userDetails, Integer refund) {
 		Member member = getMember(userDetails.getId());
 
 		isPointsEnoughForRefund(refund, member);
@@ -83,7 +83,8 @@ public class PointService {
 			.refundStatus(RefundStatus.WITHDRAWN_IN_PROGRESS)
 			.build();
 
-		buyRepository.save(buy);
+		Buy savedBuy = buyRepository.save(buy);
+		return BuyResponse.of(savedBuy);
 	}
 
 	private void isPointsEnoughForRefund(Integer refund, Member member) {
