@@ -1,5 +1,6 @@
 package com.mm.api.domain.point.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,11 +26,14 @@ public class PointService {
 	private final MemberRepository memberRepository;
 	private final BuyRepository buyRepository;
 
+	@Transactional(readOnly = true)
 	public Integer getMyPoint(OAuth2UserDetails userDetails) {
 		Long memberId = userDetails.getId();
 		return getMember(memberId).getPoint();
 	}
 
+	// TODO 쿼리로 가져오게 개선
+	@Transactional(readOnly = true)
 	public PointsResponse getCumulativeHistory(OAuth2UserDetails userDetails) {
 		Long memberId = userDetails.getId();
 		Member member = getMember(memberId);
@@ -38,7 +42,7 @@ public class PointService {
 		List<BuyResponse> buyResponses = buys
 			.stream()
 			.filter(this::isRefundCumulative)
-			.map(BuyResponse::of)
+			.map(buy -> BuyResponse.of(buy, buy.getMember()))
 			.toList();
 		Integer totalPoint = buys.stream()
 			.filter(this::isRefundCumulativeTotalPoint)
@@ -48,6 +52,7 @@ public class PointService {
 		return new PointsResponse(totalPoint, buyResponses);
 	}
 
+	@Transactional(readOnly = true)
 	public PointsResponse getExpectedHistory(OAuth2UserDetails userDetails) {
 		Long memberId = userDetails.getId();
 		Member member = getMember(memberId);
@@ -56,7 +61,7 @@ public class PointService {
 		List<BuyResponse> buyResponses = buyRepository.findAllByMember(member)
 			.stream()
 			.filter(this::isRefundExpected)
-			.map(BuyResponse::of)
+			.map(buy -> BuyResponse.of(buy, buy.getMember()))
 			.toList();
 		Integer totalPoint = buys.stream()
 			.filter(this::isRefundExpectedTotalPoint)
@@ -64,6 +69,34 @@ public class PointService {
 			.reduce(0, Integer::sum);
 
 		return new PointsResponse(totalPoint, buyResponses);
+	}
+
+	public BuyResponse postPointsWithdraw(OAuth2UserDetails userDetails, Integer refund) {
+		Member member = getMember(userDetails.getId());
+
+		isPointsEnoughForRefund(refund, member);
+
+		Buy buy = Buy.builder()
+			.member(member)
+			.refund(refund)
+			.uploadTime(LocalDateTime.now())
+			.refundStatus(RefundStatus.WITHDRAWN_IN_PROGRESS)
+			.build();
+
+		Buy savedBuy = buyRepository.save(buy);
+		return BuyResponse.of(savedBuy, savedBuy.getMember());
+	}
+
+	private void isPointsEnoughForRefund(Integer refund, Member member) {
+		if (refund < 1000) {
+			throw new CustomException(ErrorCode.POINTS_WITHDRAW_MIN);
+		}
+		if (refund > 5000) {
+			throw new CustomException(ErrorCode.POINTS_WITHDRAW_MAX);
+		}
+		if (refund > member.getPoint()) {
+			throw new CustomException(ErrorCode.POINTS_WITHDRAW_NOT_ENOUGH);
+		}
 	}
 
 	private boolean isRefundCumulativeTotalPoint(Buy buy) {
@@ -76,11 +109,14 @@ public class PointService {
 
 	private boolean isRefundCumulative(Buy buy) {
 		return buy.getRefundStatus().equals(RefundStatus.COMPLETED) ||
-			buy.getRefundStatus().equals(RefundStatus.REJECTED);
+			buy.getRefundStatus().equals(RefundStatus.REJECTED) ||
+			buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_COMPLETED) ||
+			buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_REJECTED);
 	}
 
 	private boolean isRefundExpected(Buy buy) {
-		return buy.getRefundStatus().equals(RefundStatus.IN_PROGRESS);
+		return buy.getRefundStatus().equals(RefundStatus.IN_PROGRESS) ||
+			buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_IN_PROGRESS);
 	}
 
 	private Member getMember(Long memberId) {

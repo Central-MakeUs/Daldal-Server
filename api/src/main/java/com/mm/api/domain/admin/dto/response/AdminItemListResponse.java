@@ -13,6 +13,7 @@ public record AdminItemListResponse(Long lastPageNum, List<AdminItemResponse> ad
 										   Integer price,
 										   Integer refund,
 										   String thumbnailUrl,
+										   Boolean isSuggested,
 										   List<String> imageUrls,
 										   List<String> videoUrls) {
 		public static AdminItemResponse of(Item item, List<String> imageUrls, List<String> videoUrls) {
@@ -24,6 +25,7 @@ public record AdminItemListResponse(Long lastPageNum, List<AdminItemResponse> ad
 				item.getPrice(),
 				item.getRefund(),
 				item.getThumbnailUrl(),
+				item.getIsSuggested(),
 				imageUrls,
 				videoUrls
 			);

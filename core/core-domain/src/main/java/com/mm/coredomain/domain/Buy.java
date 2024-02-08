@@ -1,9 +1,19 @@
 package com.mm.coredomain.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
@@ -11,55 +21,69 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class Buy extends BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Lob
-    private String redirectUrl;
+	@Lob
+	private String redirectUrl;
 
-    private LocalDateTime uploadTime;
+	private LocalDateTime uploadTime;
 
-    private LocalDateTime approvedTime;
+	private LocalDateTime approvedTime;
 
-    private Integer refund;
+	private Integer pointsBeforeRefund;
 
-    private RefundStatus refundStatus;
+	private Integer pointsAfterRefund;
 
-    private String rejectReason;
+	private Integer purchase;
 
-    @Lob
-    private String certImageUrl;
+	private Integer refund;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+	private RefundStatus refundStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Item item;
+	private String rejectReason;
 
-    public void updateRefundStatus(RefundStatus refundStatus) {
-        this.refundStatus = refundStatus;
-    }
+	@Lob
+	private String certImageUrl;
 
-    public void setApprovedTimeNow() {
-        this.approvedTime = LocalDateTime.now();
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Member member;
 
-    public void approveRefundStatus() {
-        this.refundStatus = RefundStatus.COMPLETED;
-    }
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Item item;
 
-    public void rejectRefundStatus(String rejectReason) {
-        this.refundStatus = RefundStatus.REJECTED;
-        this.rejectReason = rejectReason;
-    }
+	public void updatePointsBeforeRefund(Integer point) {
+		pointsBeforeRefund = point;
+	}
 
-    public void approveWithdrawnStatus() {
-        this.refundStatus = RefundStatus.WITHDRAWN_COMPLETED;
-    }
+	public void updatePointsAfterRefund(Integer point) {
+		pointsAfterRefund = point;
+	}
 
-    public void rejectWithdrawnStatus(String rejectReason) {
-        this.refundStatus = RefundStatus.WITHDRAWN_REJECTED;
-        this.rejectReason = rejectReason;
-    }
+	public void updateRefundStatus(RefundStatus refundStatus) {
+		this.refundStatus = refundStatus;
+	}
+
+	public void setApprovedTimeNow() {
+		this.approvedTime = LocalDateTime.now();
+	}
+
+	public void approveRefundStatus() {
+		this.refundStatus = RefundStatus.COMPLETED;
+	}
+
+	public void rejectRefundStatus(String rejectReason) {
+		this.refundStatus = RefundStatus.REJECTED;
+		this.rejectReason = rejectReason;
+	}
+
+	public void approveWithdrawnStatus() {
+		this.refundStatus = RefundStatus.WITHDRAWN_COMPLETED;
+	}
+
+	public void rejectWithdrawnStatus(String rejectReason) {
+		this.refundStatus = RefundStatus.WITHDRAWN_REJECTED;
+		this.rejectReason = rejectReason;
+	}
 }
