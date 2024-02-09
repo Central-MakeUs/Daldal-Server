@@ -30,6 +30,16 @@ public class SearchCustomRepositoryImpl implements SearchCustomRepository {
 			.fetch();
 	}
 
+	@Override
+	public Long getSearchResultNumber(String keyword) {
+		return jpaQueryFactory.select(item.count())
+			.from(item)
+			.where(
+				containsKeyword(keyword)
+			)
+			.fetchOne();
+	}
+
 	private BooleanBuilder containsKeyword(String keyword) {
 		BooleanBuilder booleanBuilder = new BooleanBuilder();
 		if (keyword == null) {

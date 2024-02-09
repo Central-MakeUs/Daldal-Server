@@ -62,15 +62,21 @@ public class DibService {
 		dibRepository.save(dib);
 	}
 
-	public void deleteDib(Long itemId, OAuth2UserDetails userDetails) {
+	public void deleteDib(List<Long> itemIds, OAuth2UserDetails userDetails) {
 		Member member = getMember(userDetails.getId());
-		Item item = getItem(itemId);
+		List<Item> items = itemIds.stream()
+			.map(this::getItem)
+			.toList();
 
-		Dib dib = dibRepository.findByMemberAndItem(member, item)
-			.orElseThrow(() -> new CustomException(DIB_NOT_FOUND));
-		dibRepository.delete(dib);
+		items
+			.forEach(item -> {
+				Dib dib = dibRepository.findByMemberAndItem(member, item)
+					.orElseThrow(() -> new CustomException(DIB_NOT_FOUND));
+				dibRepository.delete(dib);
+			});
 	}
 
+	@Transactional(readOnly = true)
 	public DibListResponse getDibsMe(Integer page, OAuth2UserDetails userDetails) {
 		Member member = getMember(userDetails.getId());
 		List<Dib> dibs = dibCustomRepository.getDibsByPage(page, member);
@@ -82,7 +88,9 @@ public class DibService {
 		Long pageNum = dibCustomRepository.getPageNum(member);
 		Boolean isLastPage = pageNum.equals(page.longValue());
 
-		return new DibListResponse(isLastPage, itemResponses);
+		long count = dibRepository.count();
+
+		return new DibListResponse(isLastPage, count, itemResponses);
 	}
 
 	private boolean isDibExist(Member member, Item item) {

@@ -4,5 +4,5 @@ import java.util.List;
 
 import com.mm.api.domain.item.dto.response.ItemResponse;
 
-public record DibListResponse(Boolean isLastPage, List<ItemResponse> itemResponses) {
+public record DibListResponse(Boolean isLastPage, Long count, List<ItemResponse> itemResponses) {
 }

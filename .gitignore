@@ -41,3 +41,4 @@ out/
 
 ### VS Code ###
 .vscode/
+/core/core-security/src/main/resources/key/AuthKey_X93DK84396.p8

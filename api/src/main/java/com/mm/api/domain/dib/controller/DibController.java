@@ -1,5 +1,7 @@
 package com.mm.api.domain.dib.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,10 +39,10 @@ public class DibController {
 	}
 
 	@Operation(summary = "특정 상품을 찜하기 취소 합니다.")
-	@DeleteMapping("/dib/{itemId}")
-	public CommonResponse<?> deleteDib(@PathVariable Long itemId,
+	@DeleteMapping("/dib/cancel")
+	public CommonResponse<?> deleteDib(@RequestParam List<Long> itemIds,
 		@AuthenticationPrincipal OAuth2UserDetails userDetails) {
-		dibService.deleteDib(itemId, userDetails);
+		dibService.deleteDib(itemIds, userDetails);
 		return CommonResponse.noContent();
 	}
 
