@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mm.api.domain.dib.service.DibService;
-import com.mm.api.domain.item.dto.response.ItemListResponse;
 import com.mm.api.domain.item.dto.response.ItemResponse;
+import com.mm.api.domain.search.dto.SearchResponse;
 import com.mm.coredomain.domain.Item;
 import com.mm.coreinfraqdsl.repository.SearchCustomRepository;
 import com.mm.coresecurity.oauth.OAuth2UserDetails;
@@ -23,7 +23,7 @@ public class SearchService {
 	private final DibService dibService;
 
 	@Transactional(readOnly = true)
-	public ItemListResponse searchKeyword(Integer page, String keyword, OAuth2UserDetails userDetails) {
+	public SearchResponse searchKeyword(Integer page, String keyword, OAuth2UserDetails userDetails) {
 		List<Item> items = searchCustomRepository.searchItems(page, keyword);
 		List<Boolean> dibs = dibService.getDib(items, userDetails);
 
@@ -35,6 +35,8 @@ public class SearchService {
 		Long pageNum = searchCustomRepository.getPageNum(keyword);
 		Boolean isLastPage = pageNum.equals(page.longValue());
 
-		return new ItemListResponse(isLastPage, itemResponses);
+		Long count = searchCustomRepository.getSearchResultNumber(keyword);
+
+		return new SearchResponse(isLastPage, count, itemResponses);
 	}
 }

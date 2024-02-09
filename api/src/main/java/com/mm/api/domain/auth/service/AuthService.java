@@ -80,6 +80,16 @@ public class AuthService {
 		return memberService.getMemberInfo(userDetails.getId());
 	}
 
+	public void getWithdrawl(OAuth2UserDetails userDetails) {
+		Member member = getMember(userDetails.getId());
+		memberRepository.delete(member);
+	}
+
+	private Member getMember(Long memberId) {
+		return memberRepository.findById(memberId)
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+	}
+
 	private KakaoAuthInfoResponse getKakaoAuthInfoResponse(KakaoAuthLoginResponse kakaoLoginAccessToken) {
 		return kakaoAuthInfoClient.getInfo("Bearer " + kakaoLoginAccessToken.accessToken());
 	}

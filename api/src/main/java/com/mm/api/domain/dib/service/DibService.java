@@ -87,7 +87,9 @@ public class DibService {
 		Long pageNum = dibCustomRepository.getPageNum(member);
 		Boolean isLastPage = pageNum.equals(page.longValue());
 
-		return new DibListResponse(isLastPage, itemResponses);
+		long count = dibRepository.count();
+
+		return new DibListResponse(isLastPage, count, itemResponses);
 	}
 
 	private boolean isDibExist(Member member, Item item) {
