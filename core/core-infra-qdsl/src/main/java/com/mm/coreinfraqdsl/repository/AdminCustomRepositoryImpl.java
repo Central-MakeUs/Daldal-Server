@@ -25,6 +25,7 @@ public class AdminCustomRepositoryImpl implements AdminCustomRepository {
 	@Override
 	public List<Item> getItemsByPage(Integer page) {
 		return jpaQueryFactory.selectFrom(item)
+			.orderBy(item.id.desc())
 			.offset((page - 1) * PAGE_OFFSET)
 			.limit(PAGE_OFFSET)
 			.fetch();
@@ -45,6 +46,7 @@ public class AdminCustomRepositoryImpl implements AdminCustomRepository {
 	public List<Buy> getBuysAdminByPage(Integer page) {
 		return jpaQueryFactory.selectFrom(buy)
 			.where(isBuy())
+			.orderBy(buy.id.desc())
 			.offset((page - 1) * PAGE_OFFSET)
 			.limit(PAGE_OFFSET)
 			.fetch();
@@ -66,6 +68,7 @@ public class AdminCustomRepositoryImpl implements AdminCustomRepository {
 	public List<Buy> getWithdrawsAdminByPage(Integer page) {
 		return jpaQueryFactory.selectFrom(buy)
 			.where(isWithdraw())
+			.orderBy(buy.id.desc())
 			.offset((page - 1) * PAGE_OFFSET)
 			.limit(PAGE_OFFSET)
 			.fetch();
