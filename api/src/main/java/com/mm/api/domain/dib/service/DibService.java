@@ -76,6 +76,7 @@ public class DibService {
 			});
 	}
 
+	@Transactional(readOnly = true)
 	public DibListResponse getDibsMe(Integer page, OAuth2UserDetails userDetails) {
 		Member member = getMember(userDetails.getId());
 		List<Dib> dibs = dibCustomRepository.getDibsByPage(page, member);
