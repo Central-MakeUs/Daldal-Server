@@ -16,7 +16,6 @@ import com.mm.api.domain.admin.dto.response.BuyListResponse;
 import com.mm.api.domain.admin.dto.response.WithdrawListResponse;
 import com.mm.api.domain.admin.service.AdminService;
 import com.mm.api.domain.buy.dto.response.BuyResponse;
-import com.mm.api.domain.buy.service.BuyService;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AdminController {
 	private final AdminService adminService;
-	private final BuyService buyService;
 
 	@Operation(summary = "url을 입력해 상품글을 크롤링합니다.", description = "zigzag url만 가능, ex) https://s.zigzag.kr/dV7jnGouAl?af=1")
 	@PostMapping("/items/crawl")
