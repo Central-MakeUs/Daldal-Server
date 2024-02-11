@@ -62,6 +62,6 @@ jobs:
 
   #     - name: Trigger Portainer Webhook
   #       run: |
-  #         PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_WEBHOOK_DNS}}
+  #         PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_STAGE_DNS}}
   #         curl -X POST -d "{}" -H "Content-Type: application/json" --insecure $PORTAINER_WEBHOOK_URL
     
