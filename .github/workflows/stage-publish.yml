@@ -1,8 +1,8 @@
-name: CI/CD pipeline
+name: stage CI/CD pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "stage" ]
 
 permissions:
   contents: read
@@ -48,20 +48,20 @@ jobs:
         password: ${{secrets.DOCKERHUB_TOKEN}}
         
     - name: Build the Docker image
-      run: docker build -t ${{secrets.DOCKERHUB_REPOSITORY}}/daldal-api:latest -f ./api/DockerFile .
+      run: docker build -t ${{secrets.DOCKERHUB_REPOSITORY}}/daldal-stage:latest -f ./api/DockerFile .
       
     - name: Docker Push
-      run: docker push ${{secrets.DOCKERHUB_REPOSITORY}}/daldal-api:latest
+      run: docker push ${{secrets.DOCKERHUB_REPOSITORY}}/daldal-stage:latest
       
 
-  cd:
-    needs: ci
-    runs-on: ubuntu-latest
+  # cd:
+  #   needs: ci
+  #   runs-on: ubuntu-latest
 
-    steps:
+  #   steps:
 
-      - name: Trigger Portainer Webhook
-        run: |
-          PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_WEBHOOK_DNS}}
-          curl -X POST -d "{}" -H "Content-Type: application/json" --insecure $PORTAINER_WEBHOOK_URL
+  #     - name: Trigger Portainer Webhook
+  #       run: |
+  #         PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_WEBHOOK_DNS}}
+  #         curl -X POST -d "{}" -H "Content-Type: application/json" --insecure $PORTAINER_WEBHOOK_URL
     
