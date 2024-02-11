@@ -2,5 +2,5 @@ FROM openjdk:17-jdk
 ARG JAR_PATH=api/build/libs
 COPY ${JAR_PATH}/api.jar api.jar
 #ENTRYPOINT ["java", "-jar"]
-ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8888", "-jar"]
+ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*8888", "-jar"]
 CMD ["/api.jar"]
