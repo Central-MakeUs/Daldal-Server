@@ -89,7 +89,7 @@ public class AdminController {
 	}
 
 	@Operation(summary = "전체 출금 신청을 페이지 단위로 가져옵니다")
-	@GetMapping("/buys/{buyId}/withdraw")
+	@GetMapping("/buys/withdraw")
 	public CommonResponse<WithdrawListResponse> getWithdraws(
 		@RequestParam(required = false, defaultValue = "1") Integer page) {
 		WithdrawListResponse response = adminService.getWithdraws(page);
@@ -97,7 +97,7 @@ public class AdminController {
 	}
 
 	@Operation(summary = "특정 유저 출금 신청을 페이지 단위로 가져옵니다")
-	@GetMapping("/buys/{buyId}/withdraw/members/{memberId}")
+	@GetMapping("/buys/withdraw/members/{memberId}")
 	public CommonResponse<WithdrawListResponse> getWithdraws(
 		@RequestParam(required = false, defaultValue = "1") Integer page,
 		@PathVariable Long memberId) {
