@@ -3,5 +3,4 @@ ARG JAR_PATH=api/build/libs
 COPY ${JAR_PATH}/api.jar api.jar
 COPY key/AuthKey_X93DK84396.p8 /key/AuthKey_X93DK84396.p8.zip
 ENTRYPOINT ["java","-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,address=8080,suspend=n", "-Dspring.cache.type=NONE", "-jar"]
-#ENTRYPOINT ["java", "-jar"]
 CMD ["/api.jar"]
