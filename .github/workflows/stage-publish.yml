@@ -54,14 +54,14 @@ jobs:
       run: docker push ${{secrets.DOCKERHUB_REPOSITORY}}/daldal-stage:latest
       
 
-  cd:
-    needs: ci
-    runs-on: ubuntu-latest
+  # cd:
+  #   needs: ci
+  #   runs-on: ubuntu-latest
 
-    steps:
+  #   steps:
 
-      - name: Trigger Portainer Webhook
-        run: |
-          PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_WEBHOOK_DNS}}
-          curl -X POST -d "{}" -H "Content-Type: application/json" --insecure $PORTAINER_WEBHOOK_URL
+  #     - name: Trigger Portainer Webhook
+  #       run: |
+  #         PORTAINER_WEBHOOK_URL=${{secrets.PORTAINER_WEBHOOK_DNS}}
+  #         curl -X POST -d "{}" -H "Content-Type: application/json" --insecure $PORTAINER_WEBHOOK_URL
     
