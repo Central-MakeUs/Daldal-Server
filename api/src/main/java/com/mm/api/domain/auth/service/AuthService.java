@@ -85,6 +85,17 @@ public class AuthService {
 		memberRepository.delete(member);
 	}
 
+	public TokenResponse getSuperToken() {
+		Member member = memberRepository.findById(1L)
+			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+		OAuth2UserDetails oauth2UserDetails = createOauth2UserDetails(member);
+
+		String accessToken = jwtTokenProvider.generateAccessToken(oauth2UserDetails);
+
+		return new TokenResponse(accessToken, null);
+	}
+
 	private Member getMember(Long memberId) {
 		return memberRepository.findById(memberId)
 			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));

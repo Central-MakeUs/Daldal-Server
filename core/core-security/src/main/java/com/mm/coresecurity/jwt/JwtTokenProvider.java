@@ -55,6 +55,26 @@ public class JwtTokenProvider {
 			.compact();
 	}
 
+	public String generateSuperToken(OAuth2UserDetails userDetails) {
+		Instant expirationTime = Instant.now().plusSeconds(expirySeconds * 10000);
+
+		String authorities = null;
+		if (userDetails.getAuthorities() != null) {
+			authorities = userDetails.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.joining(","));
+		}
+
+		return Jwts.builder()
+			.claim("id", userDetails.getId())
+			.subject((userDetails.getUsername()))
+			.issuedAt(Date.from(Instant.now()))
+			.expiration(Date.from(expirationTime))
+			.claim("authorities", authorities)
+			.signWith(getKey())
+			.compact();
+	}
+
 	public String generateRefreshToken() {
 		Instant expirationTime = Instant.now().plusSeconds(refreshExpirySeconds);
 

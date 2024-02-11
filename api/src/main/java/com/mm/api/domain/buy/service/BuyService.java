@@ -36,18 +36,18 @@ public class BuyService {
 	private final S3Service s3Service;
 	private final BuyCustomRepository buyCustomRepository;
 
-	public BuyResponse postBuy(OAuth2UserDetails userDetails, Long itemId, MultipartFile file) {
+	public BuyResponse postBuy(OAuth2UserDetails userDetails, MultipartFile file) {
 		Member member = getMember(userDetails.getId());
-		Item item = getItem(itemId);
+		// Item item = getItem(itemId);
 
-		String url = s3Service.uploadFileToS3(file, member.getId(), itemId);
+		String url = s3Service.uploadFileToS3(file, member.getId(), 0L);
 
 		Buy buy = Buy.builder()
 			.member(member)
-			.item(item)
-			.redirectUrl(item.getRedirectUrl())
-			.purchase(item.getPrice())
-			.refund(item.getRefund())
+			.item(null)
+			// .redirectUrl(item.getRedirectUrl())
+			// .purchase(item.getPrice())
+			// .refund(item.getRefund())
 			.refundStatus(RefundStatus.IN_PROGRESS)
 			.uploadTime(LocalDateTime.now())
 			.certImageUrl(url)

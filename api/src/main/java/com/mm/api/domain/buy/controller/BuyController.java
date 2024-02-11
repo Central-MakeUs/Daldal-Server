@@ -59,11 +59,10 @@ public class BuyController {
 
 	// 회원만
 	@Operation(summary = "구매 인증을 작성합니다.", description = "form으로 input type을 file로 지정해서 이미지를 첨부합니다.")
-	@PostMapping(value = "/buys/items/{itemId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/buys", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public CommonResponse<BuyResponse> postBuy(@AuthenticationPrincipal OAuth2UserDetails userDetails,
-		@PathVariable Long itemId,
 		@RequestPart(value = "file", required = true) MultipartFile file) {
-		BuyResponse buyResponse = buyService.postBuy(userDetails, itemId, file);
+		BuyResponse buyResponse = buyService.postBuy(userDetails, file);
 		return CommonResponse.ok(buyResponse);
 	}
 
