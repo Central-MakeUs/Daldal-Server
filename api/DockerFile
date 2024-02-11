@@ -1,5 +1,6 @@
 FROM openjdk:17-jdk
 ARG JAR_PATH=api/build/libs
 COPY ${JAR_PATH}/api.jar api.jar
-ENTRYPOINT ["java", "-jar"]
+#ENTRYPOINT ["java", "-jar"]
+ENTRYPOINT ["java","-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n", "-Dspring.cache.type=NONE", "-jar"]
 CMD ["/api.jar"]
