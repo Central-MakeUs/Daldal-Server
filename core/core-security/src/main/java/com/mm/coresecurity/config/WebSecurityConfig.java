@@ -4,6 +4,7 @@ import com.mm.coresecurity.jwt.JwtAccessDeniedHandler;
 import com.mm.coresecurity.jwt.JwtAuthenticationEntryPoint;
 import com.mm.coresecurity.jwt.JwtAuthenticationFilter;
 import com.mm.coresecurity.oauth.CustomRequestEntityConverter;
+import com.mm.coresecurity.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.mm.coresecurity.oauth.OAuth2AuthSuccessHandler;
 import com.mm.coresecurity.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,7 @@ public class WebSecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2AuthSuccessHandler oAuth2AuthSuccessHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
@@ -68,6 +70,8 @@ public class WebSecurityConfig {
                                 .tokenEndpoint(token -> token
                                         .accessTokenResponseClient(accessTokenResponseClient()))
                                 .successHandler(oAuth2AuthSuccessHandler)
+                                .authorizationEndpoint(config ->
+                                        config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository))
                                 .userInfoEndpoint()
                                 .userService(oAuth2UserService))
 
