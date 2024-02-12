@@ -73,8 +73,8 @@ public class WebSecurityConfig {
 
                 .authorizeHttpRequests(authorize ->
                         authorize
-                                //                                .requestMatchers(permitAllRequests()).permitAll()
-                                .anyRequest().permitAll())
+                                .requestMatchers(permitAllRequests()).permitAll()
+                                .anyRequest().authenticated())
 
                 .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer -> {
@@ -94,7 +94,10 @@ public class WebSecurityConfig {
                 antMatcher("/swagger-resources/**"),
                 antMatcher("/v3/api-docs/**"),
                 antMatcher("/webjars/**"),
-                antMatcher("/h2-console/**")
+                antMatcher("/h2-console/**"),
+
+                antMatcher("/oauth2/**"),
+                antMatcher("/oauth/**")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
