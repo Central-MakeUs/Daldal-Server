@@ -29,7 +29,7 @@ import java.util.Date;
 public class CustomRequestEntityConverter implements Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> {
 
     private OAuth2AuthorizationCodeGrantRequestEntityConverter defaultConverter;
-    @Value("${spring.security.oauth2.client.registration.apple.client-secret}")
+    @Value("${spring.security.oauth2.client.registration.apple.clientSecret}")
     private String APPLE_CLIENT_SECRET;
 
     public CustomRequestEntityConverter() {
