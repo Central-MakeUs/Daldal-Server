@@ -1,13 +1,5 @@
 package com.mm.api.domain.admin.service;
 
-import static com.mm.api.exception.ErrorCode.*;
-
-import java.util.List;
-import java.util.stream.IntStream;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.mm.api.domain.admin.dto.request.RejectBuyRefundStatusRequest;
 import com.mm.api.domain.admin.dto.response.AdminItemListResponse;
 import com.mm.api.domain.admin.dto.response.BuyListResponse;
@@ -17,191 +9,235 @@ import com.mm.api.domain.buy.dto.response.BuyResponse;
 import com.mm.api.domain.item.dto.response.ItemDetailResponse;
 import com.mm.api.exception.CustomException;
 import com.mm.api.exception.ErrorCode;
-import com.mm.coredomain.domain.Buy;
-import com.mm.coredomain.domain.Item;
-import com.mm.coredomain.domain.ItemImage;
-import com.mm.coredomain.domain.ItemVideo;
-import com.mm.coredomain.domain.Member;
+import com.mm.coredomain.domain.*;
 import com.mm.coredomain.repository.BuyRepository;
 import com.mm.coredomain.repository.ItemRepository;
 import com.mm.coredomain.repository.MemberRepository;
 import com.mm.coreinfrafeign.crawler.service.CrawlerService;
 import com.mm.coreinfraqdsl.repository.AdminCustomRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static com.mm.api.exception.ErrorCode.*;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class AdminService {
-	private final ItemRepository itemRepository;
-	private final BuyRepository buyRepository;
-	private final MemberRepository memberRepository;
-	private final CrawlerService crawlerService;
-	private final AdminCustomRepository adminCustomRepository;
+    private static final int REFUND_PERCENT = 3;
 
-	public void updateVideoUrl(Long itemId, String url) {
-		Item item = getItem(itemId);
-		ItemVideo itemVideo = ItemVideo.builder()
-			.url(url)
-			.item(item)
-			.build();
-		item.setItemVideos(List.of(itemVideo));
-	}
+    private final ItemRepository itemRepository;
+    private final BuyRepository buyRepository;
+    private final MemberRepository memberRepository;
+    private final CrawlerService crawlerService;
+    private final AdminCustomRepository adminCustomRepository;
 
-	public ItemDetailResponse crawlItem(String url) {
-		Item item = crawlerService.getZigZagItemByCrawler(url);
-		Item savedItem = itemRepository.save(item);
-		return getItemDetailResponseByItem(savedItem);
-	}
+    public void updateVideoUrl(Long itemId, String url) {
+        Item item = getItem(itemId);
+        ItemVideo itemVideo = ItemVideo.builder()
+                .url(url)
+                .item(item)
+                .build();
+        item.setItemVideos(List.of(itemVideo));
+    }
 
-	@Transactional(readOnly = true)
-	public AdminItemListResponse getItems(Integer page) {
-		List<Item> items = adminCustomRepository.getItemsByPage(page);
+    public ItemDetailResponse crawlItem(String url) {
+        Item item = crawlerService.getZigZagItemByCrawler(url);
+        Item savedItem = itemRepository.save(item);
+        return getItemDetailResponseByItem(savedItem);
+    }
 
-		List<List<String>> itemImageLists = items.stream()
-			.map(item ->
-				item.getItemImages()
-					.stream()
-					.map(ItemImage::getUrl)
-					.toList())
-			.toList();
+    @Transactional(readOnly = true)
+    public AdminItemListResponse getItems(Integer page) {
+        List<Item> items = adminCustomRepository.getItemsByPage(page);
 
-		List<List<String>> itemVideoLists = items.stream()
-			.map(item ->
-				item.getItemVideos()
-					.stream()
-					.map(ItemVideo::getUrl)
-					.toList())
-			.toList();
+        List<List<String>> itemImageLists = items.stream()
+                .map(item ->
+                        item.getItemImages()
+                                .stream()
+                                .map(ItemImage::getUrl)
+                                .toList())
+                .toList();
 
-		List<AdminItemListResponse.AdminItemResponse> adminItemResponses = IntStream.range(0, items.size())
-			.mapToObj(i ->
-				AdminItemListResponse.AdminItemResponse.of(items.get(i), itemImageLists.get(i), itemVideoLists.get(i)))
-			.toList();
+        List<List<String>> itemVideoLists = items.stream()
+                .map(item ->
+                        item.getItemVideos()
+                                .stream()
+                                .map(ItemVideo::getUrl)
+                                .toList())
+                .toList();
 
-		Long pageNum = adminCustomRepository.getItemsPageNum();
+        List<AdminItemListResponse.AdminItemResponse> adminItemResponses = IntStream.range(0, items.size())
+                .mapToObj(i ->
+                        AdminItemListResponse.AdminItemResponse.of(items.get(i), itemImageLists.get(i), itemVideoLists.get(i)))
+                .toList();
 
-		return new AdminItemListResponse(pageNum, adminItemResponses);
-	}
+        Long pageNum = adminCustomRepository.getItemsPageNum();
 
-	public void updateItemSuggest(Long itemId) {
-		Item item = getItem(itemId);
-		item.setItemSuggested();
-	}
+        return new AdminItemListResponse(pageNum, adminItemResponses);
+    }
 
-	public void updateItemNotSuggest(Long itemId) {
-		Item item = getItem(itemId);
-		item.setItemNotSuggested();
-	}
+    public void updateItemSuggest(Long itemId) {
+        Item item = getItem(itemId);
+        item.setItemSuggested();
+    }
 
-	@Transactional(readOnly = true)
-	public WithdrawListResponse getWithdraws(Integer page) {
-		List<Buy> buys = adminCustomRepository.getWithdrawsAdminByPage(page);
-		List<WithdrawResponse> withdrawResponses = buys.stream()
-			.map(buy -> {
-				Member member = buy.getMember();
-				return WithdrawResponse.of(buy, member);
-			})
-			.toList();
-		Long pageNum = adminCustomRepository.getWithdrawsAdminPageNum();
+    public void updateItemNotSuggest(Long itemId) {
+        Item item = getItem(itemId);
+        item.setItemNotSuggested();
+    }
 
-		return new WithdrawListResponse(pageNum, withdrawResponses);
-	}
+    @Transactional(readOnly = true)
+    public WithdrawListResponse getWithdraws(Integer page) {
+        List<Buy> buys = adminCustomRepository.getWithdrawsAdminByPage(page);
+        List<WithdrawResponse> withdrawResponses = buys.stream()
+                .map(buy -> {
+                    Member member = buy.getMember();
+                    return WithdrawResponse.of(buy, member);
+                })
+                .toList();
+        Long pageNum = adminCustomRepository.getWithdrawsAdminPageNum();
 
-	@Transactional(readOnly = true)
-	public WithdrawListResponse getWithdrawsByMember(Integer page, Long memberId) {
-		Member member = getMember(memberId);
-		List<Buy> buys = adminCustomRepository.getWithdrawsAdminByPageByMember(page, member);
-		List<WithdrawResponse> withdrawResponses = buys.stream()
-			.map(buy -> {
-				return WithdrawResponse.of(buy, member);
-			})
-			.toList();
-		Long pageNum = adminCustomRepository.getWithdrawsAdminPageNumByMember(member);
+        return new WithdrawListResponse(pageNum, withdrawResponses);
+    }
 
-		return new WithdrawListResponse(pageNum, withdrawResponses);
-	}
+    @Transactional(readOnly = true)
+    public WithdrawListResponse getWithdrawsByMember(Integer page, Long memberId) {
+        Member member = getMember(memberId);
+        List<Buy> buys = adminCustomRepository.getWithdrawsAdminByPageByMember(page, member);
+        List<WithdrawResponse> withdrawResponses = buys.stream()
+                .map(buy -> {
+                    return WithdrawResponse.of(buy, member);
+                })
+                .toList();
+        Long pageNum = adminCustomRepository.getWithdrawsAdminPageNumByMember(member);
 
-	public BuyResponse approvePointsWithdraw(Long buyId) {
-		Buy buy = getBuy(buyId);
-		buy.approveWithdrawnStatus();
-		buy.setApprovedTimeNow();
+        return new WithdrawListResponse(pageNum, withdrawResponses);
+    }
 
-		Member member = buy.getMember();
-		buy.updatePointsBeforeRefund(member.getPoint());
-		member.minusMemberPoint(buy.getRefund());
-		buy.updatePointsAfterRefund(member.getPoint());
-		return BuyResponse.of(buy, member);
-	}
+    public BuyResponse approvePointsWithdraw(Long buyId) {
+        Buy buy = getBuy(buyId);
+        isBuyWithdraw(buy);
 
-	public BuyResponse rejectPointsWithdraw(Long buyId, RejectBuyRefundStatusRequest request) {
-		Buy buy = getBuy(buyId);
-		buy.rejectWithdrawnStatus(request.rejectReason());
-		buy.setApprovedTimeNow();
+        buy.approveWithdrawnStatus();
+        buy.setApprovedTimeNow();
 
-		return BuyResponse.of(buy, buy.getMember());
-	}
+        Member member = buy.getMember();
+        buy.updatePointsBeforeRefund(member.getPoint());
+        member.minusMemberPoint(buy.getRefund());
+        buy.updatePointsAfterRefund(member.getPoint());
+        return BuyResponse.of(buy, member);
+    }
 
-	@Transactional(readOnly = true)
-	public BuyListResponse getBuys(Integer page) {
-		List<Buy> buys = adminCustomRepository.getBuysAdminByPage(page);
-		List<BuyResponse> buyResponses = buys.stream()
-			.map(buy -> BuyResponse.of(buy, buy.getMember()))
-			.toList();
+    public BuyResponse rejectPointsWithdraw(Long buyId, RejectBuyRefundStatusRequest request) {
+        Buy buy = getBuy(buyId);
+        isBuyWithdraw(buy);
 
-		Long pageNum = adminCustomRepository.getBuysAdminPageNum();
-		return new BuyListResponse(pageNum, buyResponses);
-	}
+        buy.rejectWithdrawnStatus(request.rejectReason());
+        buy.setApprovedTimeNow();
 
-	public BuyResponse approveBuyRefundStatus(Long buyId) {
-		Buy buy = getBuy(buyId);
-		buy.approveRefundStatus();
-		buy.setApprovedTimeNow();
+        return BuyResponse.of(buy, buy.getMember());
+    }
 
-		Member member = buy.getMember();
-		buy.updatePointsBeforeRefund(member.getPoint());
-		member.plusMemberPoint(buy.getRefund());
-		buy.updatePointsAfterRefund(member.getPoint());
-		return BuyResponse.of(buy, buy.getMember());
-	}
+    @Transactional(readOnly = true)
+    public BuyListResponse getBuys(Integer page) {
+        List<Buy> buys = adminCustomRepository.getBuysAdminByPage(page);
+        List<BuyResponse> buyResponses = buys.stream()
+                .map(buy -> BuyResponse.of(buy, buy.getMember()))
+                .toList();
 
-	public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {
-		Buy buy = getBuy(buyId);
-		buy.rejectRefundStatus(request.rejectReason());
-		buy.setApprovedTimeNow();
+        Long pageNum = adminCustomRepository.getBuysAdminPageNum();
+        return new BuyListResponse(pageNum, buyResponses);
+    }
 
-		return BuyResponse.of(buy, buy.getMember());
-	}
+    public BuyResponse approveBuyRefundStatus(Long buyId) {
+        Buy buy = getBuy(buyId);
+        isBuyRefund(buy);
+        isBuyHaveRefund(buy);
 
-	private Buy getBuy(Long id) {
-		return buyRepository.findById(id)
-			.orElseThrow(() -> new CustomException(BUY_NOT_FOUND));
-	}
+        buy.approveRefundStatus();
+        buy.setApprovedTimeNow();
 
-	private Member getMember(Long memberId) {
-		return memberRepository.findById(memberId)
-			.orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
-	}
+        Member member = buy.getMember();
+        buy.updatePointsBeforeRefund(member.getPoint());
+        member.plusMemberPoint(buy.getRefund());
+        buy.updatePointsAfterRefund(member.getPoint());
+        return BuyResponse.of(buy, buy.getMember());
+    }
 
-	private Item getItem(Long id) {
-		return itemRepository.findById(id)
-			.orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
-	}
+    private void isBuyRefund(Buy buy) {
+        if (isWithdraw(buy)) {
+            throw new CustomException(VALIDATION_FAILED);
+        }
+    }
 
-	private ItemDetailResponse getItemDetailResponseByItem(Item savedItem) {
-		List<String> images = null;
-		if (savedItem.getItemImages() != null) {
-			images = savedItem.getItemImages().stream()
-				.map(ItemImage::getUrl)
-				.toList();
-		}
-		List<String> videos = null;
-		if (savedItem.getItemVideos() != null) {
-			videos = savedItem.getItemVideos().stream()
-				.map(ItemVideo::getUrl)
-				.toList();
-		}
-		return ItemDetailResponse.of(savedItem, images, videos, false);
-	}
+    private void isBuyWithdraw(Buy buy) {
+        if (!isWithdraw(buy)) {
+            throw new CustomException(VALIDATION_FAILED);
+        }
+    }
+
+    public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {
+        Buy buy = getBuy(buyId);
+        isBuyRefund(buy);
+
+        buy.rejectRefundStatus(request.rejectReason());
+        buy.setApprovedTimeNow();
+
+        return BuyResponse.of(buy, buy.getMember());
+    }
+
+    public BuyResponse setBuyPurchaseAmount(Long buyId, Integer purchase) {
+        Buy buy = getBuy(buyId);
+        buy.updatePurchaseAndRefund(purchase, purchase * REFUND_PERCENT / 100);
+
+        return BuyResponse.of(buy, buy.getMember());
+    }
+
+    private void isBuyHaveRefund(Buy buy) {
+        if (buy.getRefund() == null || buy.getPurchase() == null) {
+            throw new CustomException(BUYS_NOT_HAVE_REFUND);
+        }
+    }
+
+    private Buy getBuy(Long id) {
+        return buyRepository.findById(id)
+                .orElseThrow(() -> new CustomException(BUY_NOT_FOUND));
+    }
+
+    private Member getMember(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+    }
+
+    private Item getItem(Long id) {
+        return itemRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ITEM_NOT_FOUND));
+    }
+
+    private ItemDetailResponse getItemDetailResponseByItem(Item savedItem) {
+        List<String> images = null;
+        if (savedItem.getItemImages() != null) {
+            images = savedItem.getItemImages().stream()
+                    .map(ItemImage::getUrl)
+                    .toList();
+        }
+        List<String> videos = null;
+        if (savedItem.getItemVideos() != null) {
+            videos = savedItem.getItemVideos().stream()
+                    .map(ItemVideo::getUrl)
+                    .toList();
+        }
+        return ItemDetailResponse.of(savedItem, images, videos, false);
+    }
+
+    private boolean isWithdraw(Buy buy) {
+        return buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_IN_PROGRESS) ||
+                buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_COMPLETED) ||
+                buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_REJECTED);
+    }
 }

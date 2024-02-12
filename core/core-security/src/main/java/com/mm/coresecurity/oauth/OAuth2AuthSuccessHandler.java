@@ -34,6 +34,7 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
     private final RedisRefreshTokenRepository redisRefreshTokenRepository;
+    private final HttpResponseUtil httpResponseUtil;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -82,9 +83,9 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
 
         response.addHeader("Authorization", "Bearer " + accessToken);
         if (isCreated) {
-            HttpResponseUtil.writeSignUpSuccessResponse(response, tokenMap);
+            httpResponseUtil.writeSignUpSuccessResponse(response, tokenMap);
         } else {
-            HttpResponseUtil.writeLoginSuccessResponse(response, tokenMap);
+            httpResponseUtil.writeLoginSuccessResponse(response, tokenMap);
         }
     }
 

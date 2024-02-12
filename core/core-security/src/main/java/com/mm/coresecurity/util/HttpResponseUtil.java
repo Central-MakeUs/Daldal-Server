@@ -2,16 +2,20 @@ package com.mm.coresecurity.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
 
+@Component
 public class HttpResponseUtil {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private static final String REDIRECT_URL = "http://localhost:5173";
+    @Value("${client-redirect-url}")
+    private String REDIRECT_URL;
 
-    public static void writeSignUpSuccessResponse(HttpServletResponse response, Map<String, String> data) throws IOException {
+    public void writeSignUpSuccessResponse(HttpServletResponse response, Map<String, String> data) throws IOException {
         String redirectUrl = REDIRECT_URL + "/welcome";
         StringBuffer sb = new StringBuffer(redirectUrl);
         sb.append("?").append("access-token=").append(data.get("accessToken"));
@@ -20,7 +24,7 @@ public class HttpResponseUtil {
         response.sendRedirect(sb.toString());
     }
 
-    public static void writeLoginSuccessResponse(HttpServletResponse response, Map<String, String> data) throws IOException {
+    public void writeLoginSuccessResponse(HttpServletResponse response, Map<String, String> data) throws IOException {
         StringBuffer sb = new StringBuffer(REDIRECT_URL);
         sb.append("?").append("access-token=").append(data.get("accessToken"));
         sb.append("&").append("refresh-token=").append(data.get("refreshToken"));
