@@ -64,7 +64,7 @@ public class WebSecurityConfig {
                 .oauth2Login(oauth2Configurer ->
                         oauth2Configurer
                                 .redirectionEndpoint(
-                                        redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/*/oauth/callout/*"))
+                                        redirectionEndpointConfig -> redirectionEndpointConfig.baseUri("/oauth/callout/*"))
                                 .tokenEndpoint(token -> token
                                         .accessTokenResponseClient(accessTokenResponseClient()))
                                 .successHandler(oAuth2AuthSuccessHandler)
