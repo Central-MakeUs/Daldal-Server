@@ -91,7 +91,7 @@ public class AuthService {
 
 		OAuth2UserDetails oauth2UserDetails = createOauth2UserDetails(member);
 
-		String accessToken = jwtTokenProvider.generateAccessToken(oauth2UserDetails);
+		String accessToken = jwtTokenProvider.generateSuperToken(oauth2UserDetails);
 
 		return new TokenResponse(accessToken, null);
 	}

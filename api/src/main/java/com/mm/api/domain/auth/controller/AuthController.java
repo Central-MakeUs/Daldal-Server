@@ -32,6 +32,12 @@ public class AuthController {
 	public void dummy(@RequestBody LoginKakaoRequest request) {
 	}
 
+	@GetMapping("/super-token")
+	public TokenResponse getSuperToken() {
+		TokenResponse superToken = authService.getSuperToken();
+		return superToken;
+	}
+
 	@Operation(summary = "(신 방식) 카카오 소셜 로그인을 합니다.")
 	@GetMapping("/api/v1/auth/login/kakao")
 	public CommonResponse<TokenResponse> loginKakao(@RequestBody LoginKakaoRequest request) {
