@@ -36,11 +36,12 @@ public class WebSecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2AuthSuccessHandler oAuth2AuthSuccessHandler;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final CustomRequestEntityConverter customRequestEntityConverter;
 
     @Bean
     public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
         DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter());
+        accessTokenResponseClient.setRequestEntityConverter(customRequestEntityConverter);
 
         return accessTokenResponseClient;
     }

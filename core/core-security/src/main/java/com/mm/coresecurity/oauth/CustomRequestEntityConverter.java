@@ -9,6 +9,7 @@ import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.RequestEntity;
@@ -26,11 +27,12 @@ import java.util.Date;
 
 @Slf4j
 @Component
+@PropertySource("classpath:application-security.yml")
 public class CustomRequestEntityConverter implements Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> {
 
     private OAuth2AuthorizationCodeGrantRequestEntityConverter defaultConverter;
-    @Value("${spring.security.oauth2.client.registration.apple.clientSecret}")
-    private String APPLE_CLIENT_SECRET;
+    @Value("${spring.security.oauth2.client.registration.apple.client-secret}")
+    private String appleClientSecret;
 
     public CustomRequestEntityConverter() {
         defaultConverter = new OAuth2AuthorizationCodeGrantRequestEntityConverter();
@@ -44,7 +46,7 @@ public class CustomRequestEntityConverter implements Converter<OAuth2Authorizati
         //Apple일 경우 secret key를 동적으로 세팅
         if (registrationId.contains("apple")) {
             params.set("client_secret",
-                    createAppleClientSecret(params.get("client_id").get(0), APPLE_CLIENT_SECRET));
+                    createAppleClientSecret(params.get("client_id").get(0), appleClientSecret));
         }
         return new RequestEntity<>(params, entity.getHeaders(),
                 entity.getMethod(), entity.getUrl());
