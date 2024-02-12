@@ -97,7 +97,8 @@ public class WebSecurityConfig {
                 antMatcher("/h2-console/**"),
 
                 antMatcher("/oauth2/**"),
-                antMatcher("/oauth/**")
+                antMatcher("/oauth/**"),
+                antMatcher("/api/v1/auth/refresh-access-token")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
