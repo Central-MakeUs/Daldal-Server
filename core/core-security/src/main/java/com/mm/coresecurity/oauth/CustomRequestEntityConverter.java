@@ -14,6 +14,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.RequestEntity;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequestEntityConverter;
+import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 
 import java.io.File;
@@ -24,6 +25,7 @@ import java.security.PrivateKey;
 import java.util.Date;
 
 @Slf4j
+@Component
 public class CustomRequestEntityConverter implements Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> {
 
     private OAuth2AuthorizationCodeGrantRequestEntityConverter defaultConverter;
