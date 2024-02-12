@@ -28,6 +28,8 @@ import static com.mm.api.exception.ErrorCode.*;
 @Transactional
 @RequiredArgsConstructor
 public class AdminService {
+    private static final int REFUND_PERCENT = 3;
+
     private final ItemRepository itemRepository;
     private final BuyRepository buyRepository;
     private final MemberRepository memberRepository;
@@ -119,7 +121,7 @@ public class AdminService {
 
     public BuyResponse approvePointsWithdraw(Long buyId) {
         Buy buy = getBuy(buyId);
-        isBuyHaveRefund(buy);
+        isBuyWithdraw(buy);
 
         buy.approveWithdrawnStatus();
         buy.setApprovedTimeNow();
@@ -133,6 +135,8 @@ public class AdminService {
 
     public BuyResponse rejectPointsWithdraw(Long buyId, RejectBuyRefundStatusRequest request) {
         Buy buy = getBuy(buyId);
+        isBuyWithdraw(buy);
+
         buy.rejectWithdrawnStatus(request.rejectReason());
         buy.setApprovedTimeNow();
 
@@ -152,6 +156,9 @@ public class AdminService {
 
     public BuyResponse approveBuyRefundStatus(Long buyId) {
         Buy buy = getBuy(buyId);
+        isBuyRefund(buy);
+        isBuyHaveRefund(buy);
+
         buy.approveRefundStatus();
         buy.setApprovedTimeNow();
 
@@ -162,15 +169,36 @@ public class AdminService {
         return BuyResponse.of(buy, buy.getMember());
     }
 
+    private void isBuyRefund(Buy buy) {
+        if (isWithdraw(buy)) {
+            throw new CustomException(VALIDATION_FAILED);
+        }
+    }
+
+    private void isBuyWithdraw(Buy buy) {
+        if (!isWithdraw(buy)) {
+            throw new CustomException(VALIDATION_FAILED);
+        }
+    }
+
     public BuyResponse rejectBuyRefundStatus(Long buyId, RejectBuyRefundStatusRequest request) {
         Buy buy = getBuy(buyId);
+        isBuyRefund(buy);
+
         buy.rejectRefundStatus(request.rejectReason());
         buy.setApprovedTimeNow();
 
         return BuyResponse.of(buy, buy.getMember());
     }
 
-    private static void isBuyHaveRefund(Buy buy) {
+    public BuyResponse setBuyPurchaseAmount(Long buyId, Integer purchase) {
+        Buy buy = getBuy(buyId);
+        buy.updatePurchaseAndRefund(purchase, purchase * REFUND_PERCENT / 100);
+
+        return BuyResponse.of(buy, buy.getMember());
+    }
+
+    private void isBuyHaveRefund(Buy buy) {
         if (buy.getRefund() == null || buy.getPurchase() == null) {
             throw new CustomException(BUYS_NOT_HAVE_REFUND);
         }
@@ -205,5 +233,11 @@ public class AdminService {
                     .toList();
         }
         return ItemDetailResponse.of(savedItem, images, videos, false);
+    }
+
+    private boolean isWithdraw(Buy buy) {
+        return buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_IN_PROGRESS) ||
+                buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_COMPLETED) ||
+                buy.getRefundStatus().equals(RefundStatus.WITHDRAWN_REJECTED);
     }
 }
