@@ -31,7 +31,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("id_token", idToken);
         } else {
             OAuth2User oAuth2User = super.loadUser(userRequest);
-            attributes = oAuth2User.getAttributes();
+            attributes = new HashMap<>(oAuth2User.getAttributes());
         }
         attributes.put("provider", registrationId);
 
