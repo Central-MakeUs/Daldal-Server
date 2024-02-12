@@ -33,13 +33,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             OAuth2User oAuth2User = super.loadUser(userRequest);
             attributes = oAuth2User.getAttributes();
         }
+        attributes.put("provider", registrationId);
 
-        String userNameAttributeName = userRequest.getClientRegistration()
-                .getProviderDetails()
-                .getUserInfoEndpoint()
-                .getUserNameAttributeName();
-
-        return new DefaultOAuth2User(Collections.emptyList(), attributes, registrationId);
+        return new DefaultOAuth2User(Collections.emptyList(), attributes, "provider");
     }
 
     public Map<String, Object> decodeJwtTokenPayload(String jwtToken) {
