@@ -56,7 +56,7 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
             member = getMember(email);
         } else {
             isCreated = true;
-            member = createMember(email);
+            member = createMember(email, provider);
         }
         List<SimpleGrantedAuthority> authorities = member.getGroups()
                 .getGroupPermissions()
@@ -97,11 +97,12 @@ public class OAuth2AuthSuccessHandler implements AuthenticationSuccessHandler {
         return memberRepository.findByEmail(email).orElseThrow(RuntimeException::new);
     }
 
-    private Member createMember(String email) {
+    private Member createMember(String email, String provider) {
         Groups userGroup = groupRepository.findByName("USER_GROUP").orElseThrow(RuntimeException::new);
         Member member = Member.builder()
                 .email(email)
                 .groups(userGroup)
+                .provider(OAuthProvider.of(provider))
                 .build();
         return memberRepository.save(member);
     }

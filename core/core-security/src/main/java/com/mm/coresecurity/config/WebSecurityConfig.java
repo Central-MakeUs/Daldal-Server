@@ -23,7 +23,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
 
-import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
 
 @Configuration
@@ -79,7 +79,11 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorize ->
                         authorize
                                 .requestMatchers(permitAllRequests()).permitAll()
-                                .anyRequest().authenticated())
+                                .requestMatchers(oauthRequests()).permitAll()
+                                .requestMatchers(itemPermitAllRequests()).permitAll()
+                                .requestMatchers(adminRequests()).permitAll()
+                                .anyRequest().hasRole("USER")
+                )
 
                 .addFilterAfter(jwtAuthenticationFilter, LogoutFilter.class)
                 .exceptionHandling(exceptionHandlingConfigurer -> {
@@ -99,18 +103,52 @@ public class WebSecurityConfig {
                 antMatcher("/swagger-resources/**"),
                 antMatcher("/v3/api-docs/**"),
                 antMatcher("/webjars/**"),
-                antMatcher("/h2-console/**"),
-
-                antMatcher("/oauth2/**"),
-                antMatcher("/oauth/**"),
-                antMatcher("/api/v1/auth/refresh-access-token")
+                antMatcher("/h2-console/**")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
 
     private RequestMatcher[] oauthRequests() {
         List<RequestMatcher> requestMatchers = List.of(
-                antMatcher(GET, "/oauth2/**")
+                antMatcher("/oauth2/authorization/kakao"),
+                antMatcher("/oauth/**"),
+                antMatcher("/api/*/auth/refresh-access-token"),
+                antMatcher("/super-token")
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
+    }
+
+    private RequestMatcher[] itemPermitAllRequests() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher(GET, "/api/*/items"),
+                antMatcher(GET, "/api/*/items/{id}"),
+                antMatcher(GET, "/api/*/items/suggested"),
+                antMatcher(GET, "/api/*/search")
+        );
+        return requestMatchers.toArray(RequestMatcher[]::new);
+    }
+
+    private RequestMatcher[] adminRequests() {
+        List<RequestMatcher> requestMatchers = List.of(
+                antMatcher(POST, "/api/*/items"),
+                antMatcher(PUT, "/api/*/items/{id}"),
+                antMatcher(DELETE, "/api/*/items/{id}"),
+                antMatcher(GET, "/api/*/members/{id}"),
+                antMatcher(PATCH, "/api/*/buys/{buyId}/refund-status"),
+                antMatcher(PATCH, "/api/*/buys/{buyId}"),
+                antMatcher(POST, "/api/*/admin/items/crawl"),
+                antMatcher(PATCH, "/api/*/admin/items/{itemId}/video-url"),
+                antMatcher(PATCH, "/api/*/admin/items/{itemId}/suggest"),
+                antMatcher(PATCH, "/api/*/admin/items/{itemId}/not-suggest"),
+                antMatcher(GET, "/api/*/admin/items"),
+                antMatcher(GET, "/api/*/admin/buys"),
+                antMatcher(PATCH, "/api/*/admin/buys/{buyId}/purchase-amount"),
+                antMatcher(PATCH, "/api/*/admin/buys/{buyId}/approve"),
+                antMatcher(PATCH, "/api/*/admin/buys/{buyId}/reject"),
+                antMatcher(GET, "/api/*/admin/buys/withdraw"),
+                antMatcher(GET, "/api/*/admin/buys/withdraw/members/{memberId}"),
+                antMatcher(PATCH, "/api/*/admin/buys/{buyId}/withdraw/approve"),
+                antMatcher(PATCH, "/api/*/admin/buys/{buyId}/withdraw/reject")
         );
         return requestMatchers.toArray(RequestMatcher[]::new);
     }
