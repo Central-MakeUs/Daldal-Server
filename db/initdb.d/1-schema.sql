@@ -55,7 +55,7 @@ create table item (
     redirect_url longtext,
     refund int,
     thumbnail_url longtext,
-    title varchar(20)
+    title longtext
 );
 
 create table item_image (
