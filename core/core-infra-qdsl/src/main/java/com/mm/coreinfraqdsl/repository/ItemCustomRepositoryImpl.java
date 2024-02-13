@@ -24,7 +24,7 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
     public List<Item> getItemsByPage(Integer page, String category) {
         return jpaQueryFactory.selectFrom(item)
                 .where(isCategory(category))
-                .orderBy(Expressions.numberTemplate(Double.class, "function('rand')").asc())
+                .orderBy(item.id.desc())
                 .offset((page - 1) * PAGE_OFFSET)
                 .limit(PAGE_OFFSET)
                 .fetch();
@@ -53,6 +53,9 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
                 .from(item)
                 .where(isCategory(category))
                 .fetchOne();
+        if (count == 0) {
+            return 1L;
+        }
         if (count % PAGE_OFFSET != 0) {
             return count / PAGE_OFFSET + 1;
         }
