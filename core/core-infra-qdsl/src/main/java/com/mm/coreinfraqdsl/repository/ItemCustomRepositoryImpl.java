@@ -53,6 +53,9 @@ public class ItemCustomRepositoryImpl implements ItemCustomRepository {
                 .from(item)
                 .where(isCategory(category))
                 .fetchOne();
+        if (count == 0) {
+            return 1L;
+        }
         if (count % PAGE_OFFSET != 0) {
             return count / PAGE_OFFSET + 1;
         }

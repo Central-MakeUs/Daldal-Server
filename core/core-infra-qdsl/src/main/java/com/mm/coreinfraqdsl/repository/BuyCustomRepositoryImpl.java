@@ -34,6 +34,9 @@ public class BuyCustomRepositoryImpl implements BuyCustomRepository {
                 .from(buy)
                 .where(buy.member.eq(member))
                 .fetchOne();
+        if (count == 0) {
+            return 1L;
+        }
         if (count % PAGE_OFFSET_ME != 0) {
             return count / PAGE_OFFSET_ME + 1;
         }
