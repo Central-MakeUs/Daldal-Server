@@ -110,7 +110,7 @@ public class WebSecurityConfig {
 
     private RequestMatcher[] oauthRequests() {
         List<RequestMatcher> requestMatchers = List.of(
-                antMatcher("/oauth2/authorization/kakao"),
+                antMatcher("/oauth2/authorization/*"),
                 antMatcher("/oauth/**"),
                 antMatcher("/api/*/auth/refresh-access-token"),
                 antMatcher("/super-token")
