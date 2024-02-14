@@ -5,6 +5,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,12 +16,17 @@ import java.security.SignatureException;
 import java.util.List;
 import java.util.Objects;
 
-import static com.mm.api.exception.ErrorCode.ACCESS_TOKEN_EXPIRED;
-import static com.mm.api.exception.ErrorCode.ACCESS_TOKEN_MALFORMED;
+import static com.mm.api.exception.ErrorCode.*;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException() {
+        ErrorResponse errorResponse = new ErrorResponse(ACCESS_DENIED.getErrorCode(), ACCESS_DENIED.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse);
+    }
+
     @ExceptionHandler(SignatureException.class)
     public ResponseEntity<ErrorResponse> handleSignatureException() {
         ErrorResponse errorResponse = new ErrorResponse(ACCESS_TOKEN_MALFORMED.getErrorCode(), ACCESS_TOKEN_MALFORMED.getMessage());

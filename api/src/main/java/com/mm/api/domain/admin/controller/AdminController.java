@@ -73,7 +73,15 @@ public class AdminController {
 		return CommonResponse.ok(responses);
 	}
 
-	@Operation(summary = "구매 인증을 승인 처리합니다")
+	@Operation(summary = "구매 인증 결제액을 설정합니다")
+	@PatchMapping("/buys/{buyId}/purchase-amount")
+	public CommonResponse<BuyResponse> setBuyPurchaseAmount(@PathVariable Long buyId,
+		@RequestParam Integer purchase) {
+		BuyResponse response = adminService.setBuyPurchaseAmount(buyId, purchase);
+		return CommonResponse.ok(response);
+	}
+
+	@Operation(summary = "구매 인증을 승인 처리합니다", description = "승인 처리 전 결제액을 설정해야합니다.")
 	@PatchMapping("/buys/{buyId}/approve")
 	public CommonResponse<BuyResponse> approveBuyRefundStatus(@PathVariable Long buyId) {
 		BuyResponse response = adminService.approveBuyRefundStatus(buyId);

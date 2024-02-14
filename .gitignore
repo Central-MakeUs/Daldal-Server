@@ -43,3 +43,4 @@ out/
 .vscode/
 /core/core-security/src/main/resources/key/AuthKey_X93DK84396.p8
 /key/AuthKey_X93DK84396.p8
+/data/

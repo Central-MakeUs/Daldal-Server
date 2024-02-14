@@ -2,5 +2,5 @@ FROM openjdk:17-jdk
 ARG JAR_PATH=api/build/libs
 COPY ${JAR_PATH}/api.jar api.jar
 COPY key/AuthKey_X93DK84396.p8 /key/AuthKey_X93DK84396.p8
-ENTRYPOINT ["java","-Xdebug", "-Xrunjdwp:transport=dt_socket,server=y,address=8888,suspend=n", "-Dspring.cache.type=NONE", "-jar"]
+ENTRYPOINT ["java","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:5005", "-jar" ,"-Dspring.profiles.active=stage"]
 CMD ["/api.jar"]
