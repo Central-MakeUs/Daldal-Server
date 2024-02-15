@@ -25,7 +25,8 @@ GET http://localhost:8080/api/v1/items?page=2
 GET http://localhost:8080/api/v1/items/1
 
 ### 어드민 크롤링 기능
-POST http://localhost:8080/api/v1/admin/items/crawl?url=https://s.zigzag.kr/f2KRWpFiXx
+POST http://localhost:8080/api/v1/admin/items/crawl?
+    url=https://zigzag.kr/catalog/products/131506009
 
 ### 카카오 로그인
 GET http://localhost:8080/api/v1/auth/login/kakao
