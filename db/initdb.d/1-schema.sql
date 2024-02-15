@@ -106,8 +106,8 @@ create table dib (
     updated_at datetime,
     item_id bigint,
     member_id bigint,
-    foreign key (item_id) references item(id),
-    foreign key (member_id) references member(id)
+    foreign key (item_id) references item(id) on delete cascade,
+    foreign key (member_id) references member(id) on delete cascade
 );
 
 create table group_permission (
