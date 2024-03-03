@@ -21,6 +21,7 @@ jobs:
           mkdir -p core/core-security/src/main/resources
           mkdir -p core/core-infra-s3/src/main/resources
           mkdir -p core/core-infra-feign/src/main/resources
+          mkdir -p core/core-infra-redis/src/main/resources
           mkdir -p core/core-security/src/main/resources/key
 
       - name: Create application-properties.yml
@@ -29,6 +30,7 @@ jobs:
           echo "${{ secrets.APPLICATION_SECURITY }}" > core/core-security/src/main/resources/application-security.yml
           echo "${{ secrets.APPLICATION_AWS_CLOUD }}" > core/core-infra-s3/src/main/resources/application-s3.yml
           echo "${{ secrets.APPLICATION_FEIGN }}" > core/core-infra-feign/src/main/resources/application-feign.yml
+          echo "${{ secrets.APPLICATION_REDIS }}" > core/core-infra-redis/src/main/resources/application-redis.yml
           echo "${{ secrets.APPLE_KEY }}" > core/core-security/src/main/resources/key/${{secrets.APPLE_KEY_NAME}}.p8
 
       - name: Set up JDK 17
