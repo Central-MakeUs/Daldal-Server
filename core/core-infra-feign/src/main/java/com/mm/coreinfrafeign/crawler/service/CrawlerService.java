@@ -28,7 +28,7 @@ public class CrawlerService {
 		Item item = Item.builder()
 			.price(response.finalPrice())
 			.title(response.name())
-			.redirectUrl(response.pageUrl())
+			.redirectUrl(redirectUrl)
 			.categoryType(categoryType)
 			.refund(getRefundPrice(response.finalPrice(), categoryType.getRefundPercent()))
 			.thumbnailUrl(response.thumbnailUrl())
