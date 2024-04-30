@@ -5,6 +5,8 @@ spring:
 
 server:
   port: 8080
+  tomcat:
+    connection-timeout: 120000
 
 sentry:
   dsn: https://999e44a6495910742e8b4648b6335a77@o4506546396332032.ingest.sentry.io/4506558091689984
