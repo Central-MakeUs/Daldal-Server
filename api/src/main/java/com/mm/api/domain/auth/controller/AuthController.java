@@ -27,6 +27,10 @@ import lombok.RequiredArgsConstructor;
 public class AuthController {
 	private final AuthService authService;
 
+	@GetMapping("/health-check")
+	public void healthCheck() {
+	}
+
 	@Operation(summary = "(구 방식) 소셜 로그인을 합니다. /oauth2/authorization/{provider}", description = "/oauth2/authorization/{provider}  provider는 KAKAO, APPLE")
 	@GetMapping("/dummy")
 	public void dummy(@RequestBody LoginKakaoRequest request) {

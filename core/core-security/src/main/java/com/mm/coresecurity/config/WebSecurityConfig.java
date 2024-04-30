@@ -100,6 +100,7 @@ public class WebSecurityConfig {
 
 	private RequestMatcher[] permitAllRequests() {
 		List<RequestMatcher> requestMatchers = List.of(
+			antMatcher("/health-check"),
 			antMatcher("/swagger-ui/**"),
 			antMatcher("/swagger-ui"),
 			antMatcher("/swagger-ui.html"),
